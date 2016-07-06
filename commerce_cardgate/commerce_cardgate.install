@@ -1,0 +1,70 @@
+<?php
+
+/**
+ * @file
+ * Installs the tables required by Commerce PayPal.
+ */
+
+
+/**
+ * Implements hook_schema().
+ */
+function commerce_cardgate_schema() {
+  $schema = array();
+
+  $schema['commerce_cardgate'] = array(
+    'description' => 'Stores CardGate Transactions.',
+    'fields' => array(
+      'trxid' => array(
+        'description' => 'Transaction id.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ),
+      'orderid' => array(
+        'description' => 'The Drupal Order id.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default' => 0,
+      ),
+      'status' => array(
+        'description' => 'The Status off a transaction.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'default' => '',
+      ),
+      'invoicenr' => array(
+        'description' => 'Number off the invoice.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'default' => '',
+      ),
+      'creditnr' => array(
+        'description' => 'The number of a credit.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'default' => '',
+      ),
+      'payment' => array(
+        'description' => 'The payment method.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'default' => '',
+      ),
+    ),
+    'primary key' => array('trxid'),
+    'foreign keys' => array(
+      'orderid' => array(
+        'table' => 'commerce_order',
+        'columns'=> array('order_id' => 'order_id'),
+      ),
+    ),
+  );
+
+  return $schema;
+}
