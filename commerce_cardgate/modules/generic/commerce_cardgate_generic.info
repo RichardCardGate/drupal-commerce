@@ -1,5 +1,5 @@
 name = CardGate Generic
-description = Implements CardGate SofortBanking in Drupal Commerce checkout.
+description = Implements CardGate Generic in Drupal Commerce checkout.
 package = Commerce (CardGate)
 dependencies[] = commerce
 dependencies[] = commerce_ui

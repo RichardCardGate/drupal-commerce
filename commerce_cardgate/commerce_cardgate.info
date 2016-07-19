@@ -12,7 +12,7 @@ core = 7.x
 ; files[] = tests/commerce_paypal.test
 
 ; Information added by drupal.org packaging script on 2012-02-05
-version = "7.x-7.1.6"
+version = "7.x-7.1.7"
 core = "7.x"
 project = "commerce_cardgate"
 datestamp = "1328400676"

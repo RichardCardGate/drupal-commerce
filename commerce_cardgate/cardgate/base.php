@@ -189,25 +189,23 @@ function _cgbetaling( $order, $payment_method ) {
             $tax_rate += $tax_data['rate'];
         }
     }
-
+    
     //collect cartitems
     $cartitems = array();
     $orderitems = $order->commerce_line_items['und'];
 
     foreach ( $orderitems as $line ) {
         $line_item = commerce_line_item_load( $line['line_item_id'] );
-
-
-        rules_invoke_event( 'commerce_product_calculate_sell_price', $line_item );
-
+        
+    
+  rules_invoke_event('commerce_product_calculate_sell_price', $line_item);
+  
         if ( $line_item ) {
             if ( $line_item->type == 'product' ) {
                 $product_id = $line_item->commerce_product['und'][0]['product_id'];
                 $product = commerce_product_load( $product_id );
                 //$price_data = entity_metadata_wrapper( 'commerce_product', $product )->commerce_price->value();
-                $price_data = entity_metadata_wrapper( 'commerce_line_item', $line_item )->commerce_unit_price->value();
-                var_dump( $price_data );
-                die;
+                $price_data = entity_metadata_wrapper('commerce_line_item', $line_item)->commerce_unit_price->value();
                 $price = $price_data['amount'];
                 $vat = 0;
                 $vat_amount = $price;

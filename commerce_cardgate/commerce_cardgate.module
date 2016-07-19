@@ -88,7 +88,7 @@ function commerce_cardgate_icons() {
     'ideal' => t('iDEAL'),
     'mistercash' => t('MisterCash'),
     'paypal' => t('PayPal'),
-    'sofort' => t('SOFORTbanking')
+    'sofortbanking' => t('SOFORTbanking')
   );
 
   foreach ($payment_methods as $name => $title) {
