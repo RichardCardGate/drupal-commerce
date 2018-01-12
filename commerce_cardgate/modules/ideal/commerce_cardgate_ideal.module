@@ -34,39 +34,35 @@ function commerce_cardgate_ideal_submit_form($payment_method, $pane_values, $che
         $merchantid = $genericsettings['merchantid'];
         $merchantkey = $genericsettings['merchantkey'];
         $siteid = $genericsettings['siteid'];
+        $hashkey = $genericsettings['hashkey'];
         if ( $genericsettings['server'] == 'testmode' ) {            
-            $gatewayurl = $genericsettings['testgatewayurl'];
-            $testmode = true;
+            $testmode = TRUE;
         } else {
-            $gatewayurl = $genericsettings['gatewayurl'];
-            $testmode = false;
+            $testmode = FALSE;
         }
     }
     
 	if(isset($checkout_pane))
 	{
-		//$cardgate = new Cardgate($merchantid, $merchantkey, $siteid, $gatewayurl);
-                
-                $oCURO_Transaction = new curo_Transaction( new CURO() );
-                
-                $oCURO_Transaction->setMerchantId( $merchantid );
-                $oCURO_Transaction->setMerchantSecret( $merchantkey );
-                $oCURO_Transaction->setSiteId( $siteid );
-                $oCURO_Transaction->setTestMode( $testmode );
-                
-                $sCurrent_Url = $gatewayurl;
-  
-                if ( !empty( $sCurrent_Url ) ) {
-                    $oCURO_Transaction->setApiHost( $sCurrent_Url );
-                }
-                
-                $aIssuers = $oCURO_Transaction->getIdealIssuers();
-                $aBanks = [];
-                foreach ( $aIssuers as $key => $aIssuer ) {
-                    $aBanks[$aIssuer['id']] = $aIssuer['name'];
-                }
-                
-		$form = array();
+
+	try {
+	
+			require_once(drupal_get_path('module', 'commerce_cardgate') . '/cardgate-clientlib-php/init.php');
+
+            $oCardGate = new cardgate\api\Client( ( int ) $merchantid, $merchantkey, $testmode );
+            $oCardGate->setIp( $_SERVER['REMOTE_ADDR'] );
+
+            $aIssuers = $oCardGate->methods()->get( cardgate\api\Method::IDEAL )->getIssuers();
+        } catch ( cardgate\api\Exception $oException_ ) {
+            $aIssuers[0] = ['id' => 0, 'name' => htmlspecialchars( $oException_->getMessage() ) ];
+        }
+
+        $aBanks = [];
+        foreach ( $aIssuers as $aIssuer ) {
+        $aBanks[$aIssuer['id']] = $aIssuer['name'];
+        }
+       	
+       	$form = array();
 
 		  // Merge in values from the order.
 		  if (!empty($order->data['commerce_cardgate_ideal'])) {
