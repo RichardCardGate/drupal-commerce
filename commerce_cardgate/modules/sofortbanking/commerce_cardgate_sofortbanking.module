@@ -1,0 +1,56 @@
+<?php
+
+require_once(drupal_get_path('module', 'commerce_cardgate') . '/cardgate/base.php');
+
+function commerce_cardgate_sofortbanking_commerce_payment_method_info() {
+  $payment_methods = array();
+
+  $icons = commerce_cardgate_icons();
+  $display_title = t('SofortBanking');
+
+  $payment_methods['sofortbanking'] = array(
+    'base' => 'commerce_cardgate_sofortbanking',
+    'title' => t('SofortBanking'),
+    'short_title' => t('SofortBanking'),
+    'display_title' => $display_title,
+    'description' => t('SofortBanking betaling'),
+    'terminal' => TRUE,
+    'offsite' => TRUE,
+    'offsite_autoredirect' => TRUE,
+  );
+  
+  return $payment_methods;
+}
+
+function commerce_cardgate_sofortbanking_settings_form($settings = NULL) {
+	$form = _cgsettings($settings, 'commerce_cardgate_sofortbanking_', 'sofortbanking');
+        
+	$form['currency_code'] = array(
+		'#type' => 'select',
+		'#title' => t('Currency'),
+		'#description' => t('Transactions can only be processed in one of the listed currencies.'),
+		'#options' => commerce_cardgate_sofortbanking_currencies(),
+		'#default_value' => (empty($settings['currency_code'])? '':$settings['currency_code']),
+	);
+        
+	return $form;
+}
+ 
+function commerce_cardgate_sofortbanking_redirect_form($form, &$form_state, $order, $payment_method) 
+{
+	_cgbetaling($order, $payment_method) ;
+}
+
+/**
+ * Returns an array of all possible language codes.
+ */
+function commerce_cardgate_sofortbanking_languages() {
+  return drupal_map_assoc(array('AU', 'DE', 'FR', 'IT', 'GB', 'ES', 'US'));
+}
+
+/**
+ * Returns an array of all possible currency codes.
+ */
+function commerce_cardgate_sofortbanking_currencies() {
+  return drupal_map_assoc(array('EUR', 'GBP', 'USD'));
+}

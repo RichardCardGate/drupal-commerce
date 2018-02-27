@@ -1,0 +1,150 @@
+<?php
+
+require_once(drupal_get_path('module', 'commerce_cardgate') . '/cardgate/base.php');
+
+function commerce_cardgate_ideal_commerce_payment_method_info() {
+  $payment_methods = array();
+
+  $icons = commerce_cardgate_icons();
+  $display_title = t('CardGateiDEAL');
+
+  $payment_methods['ideal'] = array(
+    'base' => 'commerce_cardgate_ideal',
+    'paymentcode' => 'idealpro',
+    'title' => t('iDEAL'),
+    'short_title' => t('iDEAL'),
+    'display_title' => $display_title,
+    'description' => t('iDEAL betaling'),
+    'terminal' => TRUE,
+    'offsite' => TRUE,
+    'offsite_autoredirect' => TRUE,
+  );
+
+  return $payment_methods;
+}
+
+function commerce_cardgate_ideal_submit_form($payment_method, $pane_values, $checkout_pane, $order) {
+   
+    $genericdata = commerce_payment_method_instance_load( 'generic|commerce_payment_generic' );
+    $genericsettings = $genericdata['settings'];
+    $siteid = '';
+    $gatewayurl = '';
+
+    if ( $genericdata ) {
+        $merchantid = $genericsettings['merchantid'];
+        $merchantkey = $genericsettings['merchantkey'];
+        $siteid = $genericsettings['siteid'];
+        $hashkey = $genericsettings['hashkey'];
+        if ( $genericsettings['server'] == 'testmode' ) {            
+            $testmode = TRUE;
+        } else {
+            $testmode = FALSE;
+        }
+    }
+    
+	if(isset($checkout_pane))
+	{
+
+	try {
+	
+			require_once(drupal_get_path('module', 'commerce_cardgate') . '/cardgate-clientlib-php/init.php');
+
+            $oCardGate = new cardgate\api\Client( ( int ) $merchantid, $merchantkey, $testmode );
+            $oCardGate->setIp( $_SERVER['REMOTE_ADDR'] );
+
+            $aIssuers = $oCardGate->methods()->get( cardgate\api\Method::IDEAL )->getIssuers();
+        } catch ( cardgate\api\Exception $oException_ ) {
+            $aIssuers[0] = ['id' => 0, 'name' => htmlspecialchars( $oException_->getMessage() ) ];
+        }
+
+        $aBanks = [];
+        foreach ( $aIssuers as $aIssuer ) {
+        $aBanks[$aIssuer['id']] = $aIssuer['name'];
+        }
+       	
+       	$form = array();
+
+		  // Merge in values from the order.
+		  if (!empty($order->data['commerce_cardgate_ideal'])) {
+			$pane_values += $order->data['commerce_cardgate_ideal'];
+		  }
+
+		  // Merge in default values.
+		  $pane_values += array(
+			'bankkeuze' => '',
+		  ); 
+			
+			$form['bankkeuze'] = array(
+			'#type' => 'select', 
+			'#title' => t('Kies uw bank:'), 
+			'#options' => $aBanks, 
+			'#default_value' => $pane_values['bankkeuze'], 
+			'#required' => TRUE,
+		  );
+			
+		  return $form;
+	}
+}
+
+function commerce_cardgate_ideal_submit_form_submit($payment_method, $pane_form, $pane_values, $order, $charge) {
+
+	if($pane_form['#id'] == 'edit-payment-details')
+	{	
+		/* Drupal 7 query */
+		$query = db_select('commerce_cardgate', 's');
+		$query->condition('s.orderid', $order->order_id, '=')
+			  ->condition('s.status', 'Success', '=')
+			  ->fields('s', array('trxid'))
+			  ->range(0, 50);
+		$result = $query->execute();
+		
+		$trxid = $result->fetchField();
+				
+		$transaction = commerce_payment_transaction_new($payment_method['method_id'], $order->order_id);
+		$transaction->instance_id = $payment_method['instance_id'];
+
+		$transaction->remote_id = 'Refund';
+		$transaction->amount = $charge['amount'];
+		$transaction->currency_code = $charge['currency_code'];
+		$transaction->remote_status = 'Refund';
+		$transaction->status = COMMERCE_PAYMENT_STATUS_SUCCESS;
+		$transaction->message = t("Refunded.");
+		commerce_payment_transaction_save($transaction);
+	}
+	else
+	{
+		$order->data['bankkeuze'] = $pane_values['bankkeuze'];
+	}
+}
+
+function commerce_cardgate_ideal_settings_form($settings = NULL) {
+	$form = _cgsettings($settings, 'commerce_cardgate_ideal_', 'ideal');
+	$form['currency_code'] = array(
+		'#type' => 'select',
+		'#title' => t('Currency'),
+		'#description' => t('Transactions can only be processed in one of the listed currencies.'),
+		'#options' => commerce_cardgate_ideal_currencies(),
+		'#default_value' => (empty($settings['currency_code'])? '':$settings['currency_code']),
+	);
+
+	return $form;
+}
+ 
+function commerce_cardgate_ideal_redirect_form($form, &$form_state, $order, $payment_method) 
+{
+	_cgbetaling($order, $payment_method);
+}
+
+/**
+ * Returns an array of all possible language codes.
+ */
+function commerce_cardgate_ideal_languages() {
+  return drupal_map_assoc(array('AU', 'DE', 'FR', 'IT', 'GB', 'ES', 'US'));
+}
+
+/**
+ * Returns an array of all possible currency codes.
+ */
+function commerce_cardgate_ideal_currencies() {
+  return drupal_map_assoc(array('EUR'));
+}

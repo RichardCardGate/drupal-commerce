@@ -1,0 +1,43 @@
+<?php
+
+require_once(drupal_get_path('module', 'commerce_cardgate') . '/cardgate/base.php');
+
+function commerce_cardgate_generic_commerce_payment_method_info() {
+  $payment_methods = array();
+
+  $icons = commerce_cardgate_icons();
+  $display_title = t('CardGate Generic');
+
+  $payment_methods['generic'] = array(
+    'base' => 'commerce_cardgate_generic',
+    'title' => t('CardGate Generic'),
+    'short_title' => t('Generic'),
+    'display_title' => $display_title,
+    'description' => t('Generic module'),
+    'terminal' => false,
+    'offsite' => TRUE,
+    'offsite_autoredirect' => TRUE,
+  );
+
+  return $payment_methods;
+}
+
+function commerce_cardgate_generic_settings_form($settings = NULL) {
+	$form = _cgsettings($settings, 'commerce_cardgate_generic_', 'generic');
+	return $form;
+}
+ 
+
+/**
+ * Returns an array of all possible language codes.
+ */
+function commerce_cardgate_generic_languages() {
+  return drupal_map_assoc(array('AU', 'DE', 'FR', 'IT', 'GB', 'ES', 'US'));
+}
+
+/**
+ * Returns an array of all possible currency codes.
+ */
+function commerce_cardgate_generic_currencies() {
+  return drupal_map_assoc(array('EUR', 'GBP', 'USD'));
+}
