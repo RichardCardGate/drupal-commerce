@@ -14,7 +14,7 @@ Deze betaalmodule ondersteunt Drupal versie **7.x** en maakt gebruik van Commerc
 
 Voor het gebruik van deze module zijn CardGate RESTful gegevens nodig.
 Bezoek hiervoor [Mijn CardGate](https://my.cardgate.com/) en haal daar je 
-RESTful API gebruikersnaam en wachtwoord, of neem contact op met je accountmanager.
+RESTful API gebruikersnaam en wachtwoord op, of neem contact op met je accountmanager.
 
 ## Installatie
 
