@@ -13,7 +13,7 @@ Deze betaalmodule ondersteunt Drupal versie **7.x** en maakt gebruik van Commerc
 ## Voorbereiding
 
 Voor het gebruik van deze module zijn CardGate RESTful gegevens nodig.
-Bezoek hiervoor [Mijn CardGate](https://my.cardgate.com/) en haal daar je 
+Bezoek hiervoor [Mijn CardGate](https://my.cardgate.com/) en haal daar je  
 RESTful API gebruikersnaam en wachtwoord op, of neem hiervoor contact op met je accountmanager.
 
 ## Installatie
@@ -48,9 +48,9 @@ RESTful API gebruikersnaam en wachtwoord op, of neem hiervoor contact op met je 
 
 10. Ga terug naar het **admin** gedeelte van je webshop en selecteer **Store, Configuration, Payment methods**.
 
-11. Selecteer in de lijst **Niet ingeschakelde betaalmethoden** de betaalmethode die je wenst te activeren en klik op de **Edit** link.
-    Klik bij **Actions** op de **Edit** link.
-    Selecteer de juiste **Valuta** en **sla het op**.
+11. Selecteer in de lijst **Niet ingeschakelde betaalmethoden** de betaalmethode die je wenst te activeren en klik op de **Edit** link.  
+    Klik bij **Actions** op de **Edit** link.   
+    Selecteer de juiste **Valuta** en **sla het op**.  
     
 12. Vink bij **Settings** het **Active** vinkje aan zodat de betaalmethode zichtbaar wordt in het checkout gedeelte van je webshop.
 
