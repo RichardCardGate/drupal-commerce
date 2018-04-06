@@ -2,10 +2,6 @@
 
 # CardGate module voor Drupal Commerce
 
-[![Total Downloads](https://img.shields.io/packagist/dt/cardgate/drupal_commerce.svg)](https://packagist.org/packages/cardgate/drupal_commerce)
-[![Latest Version](https://img.shields.io/packagist/v/cardgate/drupal_commerce.svg)](https://github.com/cardgate/drupal_commerce/releases)
-[![Build Status](https://travis-ci.org/cardgate/drupal_commerce.svg?branch=master)](https://travis-ci.org/cardgate/drupal_commerce)
-
 ## Support
 
 Deze betaalmodule ondersteunt Drupal versie **7.x** en maakt gebruik van Commerce versie **1.x**
