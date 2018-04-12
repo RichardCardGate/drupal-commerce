@@ -4,13 +4,13 @@
 
 ## Support
 
-Deze betaalmodule ondersteunt Drupal versie **7.x** en maakt gebruik van Commerce versie **1.x**
+Deze betaalmodule ondersteunt Drupal versie **7.x** en maakt gebruik van Commerce versie **1.x** .
 
 ## Voorbereiding
 
 Voor het gebruik van deze module zijn CardGate RESTful gegevens nodig.
 Bezoek hiervoor [Mijn CardGate](https://my.cardgate.com/) en haal daar je  
-RESTful API gebruikersnaam en wachtwoord op, of neem hiervoor contact op met je accountmanager.
+gegevens op, of neem hiervoor contact op met je accountmanager.
 
 ## Installatie
 
@@ -32,27 +32,23 @@ RESTful API gebruikersnaam en wachtwoord op, of neem hiervoor contact op met je 
 4. Klik bij **CardGate Generic** op de **Edit** link.
    Klik bij **Actions** op de **Edit** link.
    
-5. Vul de **Merchant ID** en **Merchant API key** in die je van CardGate hebt ontvangen.
+5. Vul de **site ID** en **hash key** in, deze kun je vinden bij **Sites** op [Mijn CardGate](https://my.cardgate.com/).
 
-6. Vul de **Site ID** in, deze kun je vinden bij **Sites** op [Mijn CardGate](https://my.cardgate.com/).
+6. Vul de **merchant ID** en **API key** in die je van CardGate hebt ontvangen.
 
-7. Vul de **Gateway URL** in, de standaard waarde is **secure.curopayments.net**
+7. Voor het testen van transacties kies **Test mode** en klik op **Save configuration**.
 
-8. Vul de **Test Gateway URL** in, de standaard waarde is **secure-staging.curopayments.net**
+8. Ga terug naar het **admin** gedeelte van je webshop en selecteer **Store, Configuration, Payment methods**.
 
-9. Voor het testen van transacties kies **Test mode** en klik op **Save configuration**.
-
-10. Ga terug naar het **admin** gedeelte van je webshop en selecteer **Store, Configuration, Payment methods**.
-
-11. Selecteer in de lijst **Niet ingeschakelde betaalmethoden** de betaalmethode die je wenst te activeren en klik op de **Edit** link.  
+9. Selecteer in de lijst **Niet ingeschakelde betaalmethoden** de betaalmethode die je wenst te activeren en klik op de **Edit** link.  
     Klik bij **Actions** op de **Edit** link.   
     Selecteer de juiste **Valuta** en **sla het op**.  
     
-12. Vink bij **Settings** het **Active** vinkje aan zodat de betaalmethode zichtbaar wordt in het checkout gedeelte van je webshop.
+10. Vink bij **Settings** het **Active** vinkje aan zodat de betaalmethode zichtbaar wordt in het checkout gedeelte van je webshop.
 
-13. Herhaal de **stappen 11 tot en met 12** voor iedere betaalmethode die je wenst te activeren.
+11. Herhaal de **stappen 9 tot en met 10** voor iedere betaalmethode die je wenst te activeren.
 
-14. Zorg ervoor dat je **na het testen** bij de **CardGate Generic module** omschakelt van **Test Mode** naar **Live mode** en sla het op (**Save**).
+12. Zorg ervoor dat je **na het testen** bij de **CardGate Generic module** omschakelt van **Test Mode** naar **Live mode** en sla het op (**Save**).
 
 ## Vereisten
 

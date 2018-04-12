@@ -33,20 +33,6 @@ function _cgsettings($settings = null, $base, $payment)
         '#default_value' => $payment
     );
     if ($base == 'commerce_cardgate_generic_') {
-        $form['merchantid'] = array(
-            '#type' => 'textfield',
-            '#title' => t('Merchant ID'),
-            '#description' => t('The Merchant ID from your CardGate account.'),
-            '#default_value' => $settings['merchantid'],
-            '#required' => TRUE
-        );
-        $form['merchantkey'] = array(
-            '#type' => 'textfield',
-            '#title' => t('Merchant API Key'),
-            '#description' => t('The Merchant Key from your CardGate account.'),
-            '#default_value' => $settings['merchantkey'],
-            '#required' => TRUE
-        );
         $form['siteid'] = array(
             '#type' => 'textfield',
             '#title' => t('Site ID'),
@@ -59,6 +45,20 @@ function _cgsettings($settings = null, $base, $payment)
             '#title' => t('Hash key'),
             '#description' => t('The Hash key from your CardGate account.'),
             '#default_value' => $settings['hashkey'],
+            '#required' => TRUE
+        );
+        $form['merchantid'] = array(
+            '#type' => 'textfield',
+            '#title' => t('Merchant ID'),
+            '#description' => t('The Merchant ID from your CardGate account.'),
+            '#default_value' => $settings['merchantid'],
+            '#required' => TRUE
+        );
+        $form['merchantkey'] = array(
+            '#type' => 'textfield',
+            '#title' => t('API key'),
+            '#description' => t('The Merchant Key from your CardGate account.'),
+            '#default_value' => $settings['merchantkey'],
             '#required' => TRUE
         );
         $form['server'] = array(
