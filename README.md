@@ -9,7 +9,7 @@ This payment module works with Drupal version **7.x** and makes use of Commerce 
 ## Preparation
 
 The usage of this module requires that you have obtained CardGate RESTful API credentials.
-Please visit [My Cardgate](https://my.cardgate.com/) and retrieve your credentials, or contact your accountmanager.
+Please visit [My CardGate](https://my.cardgate.com/) and retrieve your credentials, or contact your accountmanager.
 
 ## Installation
 
