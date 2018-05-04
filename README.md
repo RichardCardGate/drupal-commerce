@@ -8,14 +8,14 @@ This payment module works with Drupal version **7.x** and makes use of Commerce 
 
 ## Preparation
 
-The usage of this module requires that you have obtained CardGate RESTful API credentials.
+The usage of this module requires that you have obtained CardGate RESTful API credentials.  
 Please visit [My CardGate](https://my.cardgate.com/) and retrieve your credentials, or contact your accountmanager.
 
 ## Installation
 
 1. Download and unzip the commerce_cardgate.zip file to your desktop.
 
-2. Upload the **contents** of the zip file to your **Drupal modules** folder, which you can find here: **http://mywebshop.com/htdocs/sites/all/modules/**
+2. Upload the **contents** of the zip file to your **Drupal modules** folder, which you can find here: **http://mywebshop.com/htdocs/sites/all/modules/**  
    (Replace **http://mywebshop.com** with the URL of your webshop, so the files will end up in the **modules folder**.)
 
 

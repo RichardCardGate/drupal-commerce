@@ -8,7 +8,7 @@ Deze betaalmodule ondersteunt Drupal versie **7.x** en maakt gebruik van Commerc
 
 ## Voorbereiding
 
-Voor het gebruik van deze module zijn CardGate RESTful gegevens nodig.
+Voor het gebruik van deze module zijn CardGate RESTful gegevens nodig.  
 Bezoek hiervoor [Mijn CardGate](https://my.cardgate.com/) en haal daar je  
 gegevens op, of neem hiervoor contact op met je accountmanager.
 
