@@ -13,11 +13,11 @@ Please visit [My CardGate](https://my.cardgate.com/) and retrieve your credentia
 
 ## Installation
 
-1. Download and unzip the commerce_cardgate.zip file to your desktop.
+1. Download and unzip the most recent [source code](https://github.com/cardgate/drupal-commerce/releases) file on your desktop.
 
-2. Upload the **contents** of the zip file to your **Drupal modules** folder, which you can find here: **http://mywebshop.com/htdocs/sites/all/modules/**  
-   (Replace **http://mywebshop.com** with the URL of your webshop, so the files will end up in the **modules folder**.)
-
+2. Upload the **commerce_cardgate** folder to your **Drupal modules** folder, which you can find here:  
+	**http://mywebshop.com/htdocs/sites/all/modules/**  
+   (Replace **http://mywebshop.com** with the URL of your webshop.)
 
 ## Configuration
 

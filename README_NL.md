@@ -9,14 +9,16 @@ Deze betaalmodule ondersteunt Drupal versie **7.x** en maakt gebruik van Commerc
 ## Voorbereiding
 
 Voor het gebruik van deze module zijn CardGate RESTful gegevens nodig.  
-Bezoek hiervoor [Mijn CardGate](https://my.cardgate.com/) en haal daar je  
-gegevens op, of neem hiervoor contact op met je accountmanager.
+Bezoek hiervoor [Mijn CardGate](https://my.cardgate.com/) en haal daar je gegevens op,  
+of neem hiervoor contact op met je accountmanager.
 
 ## Installatie
 
-1. Download en unzip het **commerce_cardgate.zip** bestand op je bureaublad.
+1. Download en unzip de meest recente [source code](https://github.com/cardgate/drupal-commerce/releases) op je bureaublad.
 
-2. Installeer de plug-in via **Admin, Modules, Install new module** van je webshop.
+2. Upload de **commerce_cardgate** map naar de **Drupal modules** map, die je hier kunt vinden:  
+   **http://mywebshop.com/htdocs/sites/all/modules/**    
+   (Vervang **http://mywebshop.com** met de URL van je webshop.)
 
 
 ## Configuratie
