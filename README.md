@@ -4,7 +4,7 @@
 
 ## Support
 
-This payment module works with Drupal version **7.x** and makes use of Commerce version **1.x** .
+This payment module works with Drupal version **7.x** and makes use of Commerce version **1.x**
 
 ## Preparation
 
@@ -32,7 +32,7 @@ Please visit [My CardGate](https://my.cardgate.com/) and retrieve your credentia
 4. Click at **CardGate Generic** on the **Edit** link.
    Click at **Actions** on the **Edit** link.
    
-5. Enter the **site ID** and **hash key**, which you can find at **Sites** on <a href="https://my.cardgate.com" target='new'>My CardGate</a>.
+5. Enter the **site ID** and **hash key**, which you can find at **Sites** on [My CardGate](https://my.cardgate.com/).
 
 6. Enter the **merchant ID** and the **API key** which you have received from CardGate.
 
@@ -46,7 +46,7 @@ Please visit [My CardGate](https://my.cardgate.com/) and retrieve your credentia
     
 10. At **Settings**, checkmark **Active** so the payment method will be visible in the checkout section of your webshop.
 
-11. Repeat **steps 9 to 10** for each payment method you wish to activate.
+11. Repeat **steps 9 and 10** for each payment method you wish to activate.
 
 12. When you are **finished testing** make sure that you switch the **CardGate Generic module** from **Test Mode** to **Live mode** and save it (**Save**).
 
