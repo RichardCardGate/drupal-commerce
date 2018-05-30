@@ -27,7 +27,7 @@ Gehen zu [My CardGate](https://my.cardgate.com/) und fragen Sie Ihre Zugangsdate
 2. Wählen Sie alle **Zahlungsmittel** aus, die Sie aktivieren möchten.  
    Scrollen Sie nach unten und klicken  auf **Save configuration**.
 
-3. Gehen Sie zum **Admin**-Bereich Ihres Webshops und selectieren Sie **Store,  Configuration, Payment Methode**.
+3. Gehen Sie zum **Admin**-Bereich Ihres Webshops und selectieren Sie **Store,  Configuration, Payment Methods**.
 
 4. Klicken Sie bei **CardGate Generic** auf den **Edit** link. 
    Klicken Sie bei **Actions** auf den **Edit** link. 
