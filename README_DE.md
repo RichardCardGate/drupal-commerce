@@ -52,4 +52,4 @@ Gehen zu [My CardGate](https://my.cardgate.com/) und fragen Sie Ihre Zugangsdate
 
 ## Anforderungen
 
-Keine weiteren Anforderungen. 1
+Keine weiteren Anforderungen.
