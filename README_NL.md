@@ -4,7 +4,7 @@
 
 ## Support
 
-Deze betaalmodule ondersteunt Drupal versie **7.x** en maakt gebruik van Commerce versie **1.x** .
+Deze betaalmodule ondersteunt Drupal versie **7.x** en maakt gebruik van Commerce versie **1.x**
 
 ## Voorbereiding
 
@@ -48,7 +48,7 @@ of neem hiervoor contact op met je accountmanager.
     
 10. Vink bij **Settings** het **Active** vinkje aan zodat de betaalmethode zichtbaar wordt in het checkout gedeelte van je webshop.
 
-11. Herhaal de **stappen 9 tot en met 10** voor iedere betaalmethode die je wenst te activeren.
+11. Herhaal de **stappen 9 en 10** voor iedere betaalmethode die je wenst te activeren.
 
 12. Zorg ervoor dat je **na het testen** bij de **CardGate Generic module** omschakelt van **Test Mode** naar **Live mode** en sla het op (**Save**).
 
