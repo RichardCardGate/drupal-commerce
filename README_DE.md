@@ -44,7 +44,7 @@ Gehen zu [My CardGate](https://my.cardgate.com/) und fragen Sie Ihre Zugangsdate
    Klicken Sie bie Actions auf den Edit link.  
    Selektieren Sie richtige **Währung** aus und **speichern** Sie die Einstellungen.  
    
-10. Go to **Settings** and Klicken Sie **active** an, sodass die die Zahlungsmittel auf Ihrer Bezahlseite sichtbar  werden.   
+10. Gehen Sie zum **Settings** and Klicken Sie **active** an, sodass die Zahlungsmittel auf Ihrer Bezahlseite sichtbar  werden.   
 
 11. Wiederholen Sie die **Schritte 9 und 10** für jedes Zahlungsmittel, dass Sie aktivieren möchten.
 
