@@ -1,0 +1,56 @@
+<?php
+
+require_once(drupal_get_path('module', 'commerce_cardgate') . '/cardgate/base.php');
+
+function commerce_cardgate_idealqr_commerce_payment_method_info() {
+  $payment_methods = array();
+
+  $icons = commerce_cardgate_icons();
+  $display_title = t('iDEAL QR');
+
+  $payment_methods['idealqr'] = array(
+    'base' => 'commerce_cardgate_idealqr',
+    'title' => t('iDEAL QR'),
+    'short_title' => t('iDEAL QR'),
+    'display_title' => $display_title,
+    'description' => t('iDEAL QR betaling'),
+    'terminal' => FALSE,
+    'offsite' => TRUE,
+    'offsite_autoredirect' => TRUE,
+  );
+
+  return $payment_methods;
+}
+
+function commerce_cardgate_idealqr_settings_form($settings = NULL) {
+	$form = _cgsettings($settings, 'commerce_cardgate_idealqr_', 'idealqr');
+	
+	$form['currency_code'] = array(
+		'#type' => 'select',
+		'#title' => t('Currency'),
+		'#description' => t('Transactions can only be processed in one of the listed currencies.'),
+		'#options' => commerce_cardgate_idealqr_currencies(),
+		'#default_value' =>(empty($settings['currency_code'])? '':$settings['currency_code']),
+	);
+
+	return $form;
+}
+ 
+function commerce_cardgate_idealqr_redirect_form($form, &$form_state, $order, $payment_method) 
+{
+	_cgbetaling($order, $payment_method);
+}
+
+/**
+ * Returns an array of all possible language codes.
+ */
+function commerce_cardgate_idealqr_languages() {
+  return drupal_map_assoc(array('AU', 'DE', 'FR', 'IT', 'GB', 'ES', 'US'));
+}
+
+/**
+ * Returns an array of all possible currency codes.
+ */
+function commerce_cardgate_idealqr_currencies() {
+  return drupal_map_assoc(array('EUR', 'GBP', 'USD'));
+}

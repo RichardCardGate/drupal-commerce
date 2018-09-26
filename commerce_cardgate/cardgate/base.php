@@ -88,7 +88,7 @@ function _cgsettings($settings = null, $base, $payment)
 function _cgbetaling($order, $payment_method)
 
 
-{   
+{ 
     // Load the payment method instance and determine availability.
     // $payment_method = commerce_payment_method_load($method_id);
     //
