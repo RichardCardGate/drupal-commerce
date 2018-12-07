@@ -1,6 +1,7 @@
 <?php
 
-require_once (drupal_get_path('module', 'commerce_cardgate') . '/cardgate-clientlib-php/init.php');
+require_once (drupal_get_path('module', 'commerce_cardgate') . '/cardgate-clientlib-php/src/Autoloader.php');
+cardgate\api\Autoloader::register();
 
 function _cgsettings($settings = null, $base, $payment)
 {
@@ -115,9 +116,8 @@ function _cgbetaling($order, $payment_method)
             return array();
         }
         
-        $oCardGate = new cardgate\api\Client($merchantid, $merchantkey, $testmode);
+        $oCardGate = new \cardgate\api\Client($merchantid, $merchantkey, $testmode);
         $oCardGate->setIp($_SERVER['REMOTE_ADDR']);
-        // $oCardGate->setLanguage( $this->language->get( 'code' ) );
         
         $shop_data = system_get_info('module', 'commerce');
         $plugin_data = system_get_info('module', 'commerce_cardgate');
@@ -349,7 +349,7 @@ function _cgnotify($trxid, $orderid, $payment_method)
     $testMode = ($aRequest['testmode'] == 1 ? FALSE : FALSE);
     $verify = FALSE;
     try {        
-        $oCardGate = new cardgate\api\Client($iMerchantId, $sMerchantApiKey, $testMode);
+        $oCardGate = new \cardgate\api\Client($iMerchantId, $sMerchantApiKey, $testMode);
         $oCardGate->setIp($_SERVER['REMOTE_ADDR']);
         
         if (FALSE == $oCardGate->transactions()->verifyCallback($aRequest, $sHashkey)) {

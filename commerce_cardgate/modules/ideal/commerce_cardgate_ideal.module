@@ -47,7 +47,7 @@ function commerce_cardgate_ideal_submit_form($payment_method, $pane_values, $che
 
 	try {
 	
-			require_once(drupal_get_path('module', 'commerce_cardgate') . '/cardgate-clientlib-php/init.php');
+			//require_once(drupal_get_path('module', 'commerce_cardgate') . '/cardgate-clientlib-php/init.php');
 
             $oCardGate = new cardgate\api\Client( ( int ) $merchantid, $merchantkey, $testmode );
             $oCardGate->setIp( $_SERVER['REMOTE_ADDR'] );
