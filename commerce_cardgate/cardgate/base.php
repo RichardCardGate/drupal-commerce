@@ -4,18 +4,14 @@ require_once (drupal_get_path('module', 'commerce_cardgate') . '/cardgate-client
 cardgate\api\Autoloader::register();
 
 function _cgsettings($settings = null, $base, $payment)
-{
+{ 
     $form = array();
     $currencies = $base . 'currencies';
     // Merge default settings into the stored settings array.
     $default_currency = variable_get('commerce_default_currency', 'EUR');
-    
-    if (empty($settings['gatewayurl'])) {
-        $settings['gatewayurl'] = 'secure.curopayments.net';
-    }
-    if (empty($settings['testgatewayurl'])) {
-        $settings['testgatewayurl'] = 'secure-staging.curopayments.net';
-    }
+   
+    $settings['gatewayurl'] = 'secure.curopayments.net';
+    $settings['testgatewayurl'] = 'secure-staging.curopayments.net';
     
     $settings = (array) $settings + array(
         'merchantid' => '',
@@ -89,7 +85,7 @@ function _cgsettings($settings = null, $base, $payment)
 function _cgbetaling($order, $payment_method)
 
 
-{ 
+{
     // Load the payment method instance and determine availability.
     // $payment_method = commerce_payment_method_load($method_id);
     //

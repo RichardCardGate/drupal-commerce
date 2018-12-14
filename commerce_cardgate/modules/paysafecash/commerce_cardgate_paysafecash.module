@@ -2,18 +2,18 @@
 
 require_once(drupal_get_path('module', 'commerce_cardgate') . '/cardgate/base.php');
 
-function commerce_cardgate_giropay_commerce_payment_method_info() {
+function commerce_cardgate_paysafecash_commerce_payment_method_info() {
   $payment_methods = array();
 
   $icons = commerce_cardgate_icons();
-  $display_title = t('Giropay');
+  $display_title = t('PaySafeCash');
 
-  $payment_methods['giropay'] = array(
-    'base' => 'commerce_cardgate_giropay',
-    'title' => t('Giropay'),
-    'short_title' => t('Giropay'),
+  $payment_methods['paysafecash'] = array(
+    'base' => 'commerce_cardgate_paysafecash',
+    'title' => t('PaySafeCash'),
+    'short_title' => t('PaySafeCash'),
     'display_title' => $display_title,
-    'description' => t('Giropay betaling'),
+    'description' => t('PaySafeCash betaling'),
     'terminal' => FALSE,
     'offsite' => TRUE,
     'offsite_autoredirect' => TRUE,
@@ -22,35 +22,34 @@ function commerce_cardgate_giropay_commerce_payment_method_info() {
   return $payment_methods;
 }
 
-function commerce_cardgate_giropay_settings_form($settings = NULL) { mail('richard@cardgate.com','testdata', serialize($settings));
-	$form = _cgsettings($settings, 'commerce_cardgate_giropay_', 'giropay');
-	
+function commerce_cardgate_paysafecash_settings_form($settings = NULL) {
+	$form = _cgsettings($settings, 'commerce_cardgate_paysafecash_', 'paysafecash');
 	$form['currency_code'] = array(
 		'#type' => 'select',
 		'#title' => t('Currency'),
 		'#description' => t('Transactions can only be processed in one of the listed currencies.'),
-		'#options' => commerce_cardgate_giropay_currencies(),
+		'#options' => commerce_cardgate_paysafecash_currencies(),
 		'#default_value' =>(empty($settings['currency_code'])? '':$settings['currency_code']),
 	);
 
 	return $form;
 }
  
-function commerce_cardgate_giropay_redirect_form($form, &$form_state, $order, $payment_method) 
-{
+function commerce_cardgate_paysafecash_redirect_form($form, &$form_state, $order, $payment_method) 
+{ 
 	_cgbetaling($order, $payment_method) ;
 }
 
 /**
  * Returns an array of all possible language codes.
  */
-function commerce_cardgate_giropay_languages() {
+function commerce_cardgate_paysafecash_languages() {
   return drupal_map_assoc(array('AU', 'DE', 'FR', 'IT', 'GB', 'ES', 'US'));
 }
 
 /**
  * Returns an array of all possible currency codes.
  */
-function commerce_cardgate_giropay_currencies() {
+function commerce_cardgate_paysafecash_currencies() {
   return drupal_map_assoc(array('EUR', 'GBP', 'USD'));
 }
