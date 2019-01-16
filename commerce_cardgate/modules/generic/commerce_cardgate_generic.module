@@ -31,6 +31,7 @@ function commerce_cardgate_generic_settings_form($settings = NULL) {
 /**
  * Returns an array of all possible language codes.
  */
+ 
 function commerce_cardgate_generic_languages() {
   return drupal_map_assoc(array('AU', 'DE', 'FR', 'IT', 'GB', 'ES', 'US'));
 }

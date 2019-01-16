@@ -11,7 +11,7 @@
  */
 function commerce_cardgate_ui_admin_page() 
 { 
-    /*
+    
 	if(isset($_GET['actie']))
 	{
 		require_once(drupal_get_path('module', 'commerce_cardgate') . '/cardgate/cardgate.cls.php');
@@ -165,15 +165,12 @@ function commerce_cardgate_ui_admin_page()
 			
 		
 	$content .= '</table>';
-	
 	return $content;
-     * 
-     */
 }
 
 function get_transactions()
 {
-    /*
+
 	$result = db_query('SELECT s.trxid, s.orderid, s.status, s.invoicenr, s.creditnr FROM {commerce_cardgate} s WHERE s.payment = :payment ORDER BY s.orderid DESC', array(':payment' => 'ecare'));
 	$transacties = array();
 	
@@ -182,6 +179,5 @@ function get_transactions()
 	}
 
 	return $transacties;
-     * 
-     */
+
 }

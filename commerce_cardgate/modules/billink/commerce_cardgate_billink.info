@@ -1,5 +1,5 @@
-name = CardGate Bitcoins
-description = Implements CardGate Bitcoins in Drupal Commerce checkout.
+name = CardGate Billink
+description = Implements CardGate Billink in Drupal Commerce checkout.
 package = Commerce (CardGate)
 dependencies[] = commerce
 dependencies[] = commerce_ui

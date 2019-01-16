@@ -81,19 +81,28 @@ function commerce_cardgate_icons() {
 
   $payment_methods = array(
     'afterpay' => t('Afterpay'),
+    'bancontact' => t('Bancontact'),
     'banktransfer' => t('Bankoverboeking'),
+    'billink' => t('Billink'),
+    'bitcoin' => t('Bitcoin'),
     'creditcard' => t('CreditCard'),
     'directdebit' => t('Incasso'),
+    'giftcard' => t('Gift Card'),
     'giropay' => t('Giropay'),
     'ideal' => t('iDEAL'),
-    'mistercash' => t('MisterCash'),
+    'idealqr' => t('iDEAL QR'),
+    'klarna' => t('Klarna'),
     'paypal' => t('PayPal'),
-    'sofortbanking' => t('SOFORTbanking')
+    'paysafecard' => t('Paysafecard'),
+    'paysafecash' => t('Paysafecash'),
+    'przelewy24' => t('Przelewy'),
+    'sofortbanking' => t('SOFORTbanking'),
+    'sofortpay' => t('SofortPay')
   );
 
   foreach ($payment_methods as $name => $title) {
     $variables = array(
-      'path' => drupal_get_path('module', 'commerce_cardgate') . '/images/' . $name . '.gif',
+      'path' => drupal_get_path('module', 'commerce_cardgate') . '/images/' . $name . '.svg',
       'title' => $title,
       'alt' => $title,
       'attributes' => array(

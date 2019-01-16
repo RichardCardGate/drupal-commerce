@@ -1,0 +1,72 @@
+<?php
+
+require_once(drupal_get_path('module', 'commerce_cardgate') . '/cardgate/base.php');
+
+function commerce_cardgate_giftcard_commerce_payment_method_info() {
+  $payment_methods = array();
+   
+  $genericdata = commerce_payment_method_instance_load('generic|commerce_payment_generic');
+  $checkoutview = (isset($genericdata['settings']['checkoutview']) ? $genericdata['settings']['checkoutview'] : 'text');  
+  $genericdata = null;
+
+  $title = t('Gift Card');
+  $img = _cggetImage('giftcard.svg');
+ 
+ switch ($checkoutview){
+ 	case 'logos':
+		$display_title = $img;
+		break;
+	case 'text':
+		$display_title = $title;
+		break;
+	case 'logosandtext':
+		$display_title = $img.' '.$title;
+  		break;
+  }
+
+  $payment_methods['giftcard'] = array(
+    'base' => 'commerce_cardgate_giftcard',
+    'title' => t('Gift Card'),
+    'short_title' => t('Gift Card'),
+    'display_title' => $display_title,
+    'description' => t('Gift Card betaling'),
+    'terminal' => FALSE,
+    'offsite' => TRUE,
+    'offsite_autoredirect' => TRUE,
+  );
+
+  return $payment_methods;
+}
+
+function commerce_cardgate_giftcard_settings_form($settings = NULL) {
+	$form = _cgsettings($settings, 'commerce_cardgate_giftcard_', 'giftcard');
+	
+	$form['currency_code'] = array(
+		'#type' => 'select',
+		'#title' => t('Currency'),
+		'#description' => t('Transactions can only be processed in one of the listed currencies.'),
+		'#options' => commerce_cardgate_giftcard_currencies(),
+		'#default_value' =>(empty($settings['currency_code'])? '':$settings['currency_code']),
+	);
+
+	return $form;
+}
+ 
+function commerce_cardgate_giftcard_redirect_form($form, &$form_state, $order, $payment_method) 
+{
+	_cgbetaling($order, $payment_method);
+}
+
+/**
+ * Returns an array of all possible language codes.
+ */
+function commerce_cardgate_giftcard_languages() {
+  return drupal_map_assoc(array('AU', 'DE', 'FR', 'IT', 'GB', 'ES', 'US'));
+}
+
+/**
+ * Returns an array of all possible currency codes.
+ */
+function commerce_cardgate_giftcard_currencies() {
+  return drupal_map_assoc(array('EUR', 'GBP', 'USD'));
+}
