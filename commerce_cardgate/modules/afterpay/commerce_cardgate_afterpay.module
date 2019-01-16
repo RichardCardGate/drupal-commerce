@@ -2,15 +2,32 @@
 
 require_once(drupal_get_path('module', 'commerce_cardgate') . '/cardgate/base.php');
 
-function commerce_cardgate_afterpay_commerce_payment_method_info() {
+function commerce_cardgate_afterpay_commerce_payment_method_info() {  
+  
   $payment_methods = array();
+  
+  $genericdata = commerce_payment_method_instance_load('generic|commerce_payment_generic');
+  $checkoutview = (isset($genericdata['settings']['checkoutview']) ? $genericdata['settings']['checkoutview'] : 'text');  
+  $genericdata = null;
 
-  $icons = commerce_cardgate_icons();
-  $display_title = t('Afterpay');
+  $title = t('Afterpay');
+  $img = _cggetImage('afterpay.svg');
+ 
+ switch ($checkoutview){
+ 	case 'logos':
+		$display_title = $img;
+		break;
+	case 'text':
+		$display_title = $title;
+		break;
+	case 'logosandtext':
+		$display_title = $img.' '.$title;
+  		break;
+  }
 
   $payment_methods['afterpay'] = array(
     'base' => 'commerce_cardgate_afterpay',
-    'title' => t('Afterpay'),
+    'title' => $title,
     'short_title' => t('Afterpay'),
     'display_title' => $display_title,
     'description' => t('Afterpay betaling'),
@@ -23,6 +40,7 @@ function commerce_cardgate_afterpay_commerce_payment_method_info() {
 }
 
 function commerce_cardgate_afterpay_settings_form($settings = NULL) {
+
 	$form = _cgsettings($settings, 'commerce_cardgate_afterpay_', 'afterpay');
 	
 	$form['currency_code'] = array(
@@ -33,7 +51,6 @@ function commerce_cardgate_afterpay_settings_form($settings = NULL) {
 		'#options' => commerce_cardgate_afterpay_currencies(),
 		'#default_value' =>(empty($settings['currency_code'])? '':$settings['currency_code']),
 	);
-
 	return $form;
 }
  

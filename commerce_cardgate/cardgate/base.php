@@ -3,13 +3,16 @@
 require_once (drupal_get_path('module', 'commerce_cardgate') . '/cardgate-clientlib-php/src/Autoloader.php');
 cardgate\api\Autoloader::register();
 
-function _cgsettings($settings = null, $base, $payment)
-{ 
+function _cgsettings($settings = null, $base, $payment) {
     $form = array();
     $currencies = $base . 'currencies';
     // Merge default settings into the stored settings array.
     $default_currency = variable_get('commerce_default_currency', 'EUR');
-   
+    
+    $options['checkoutview']['logos'] = "Logo's";
+    $options['checkoutview']['text'] = 'Text';
+    $options['checkoutview']['logosandtext'] = "Logo's and Text";
+    
     $settings['gatewayurl'] = 'secure.curopayments.net';
     $settings['testgatewayurl'] = 'secure-staging.curopayments.net';
     
@@ -30,6 +33,15 @@ function _cgsettings($settings = null, $base, $payment)
         '#default_value' => $payment
     );
     if ($base == 'commerce_cardgate_generic_') {
+        $form['server'] = array(
+            '#type' => 'radios',
+            '#title' => t('Testmode'),
+            '#options' => array(
+                'testmode' => ('Testmode - use for testing'),
+                'live' => ('Live - use for processing real transactions')
+            ),
+            '#default_value' => $settings['server']
+        );
         $form['siteid'] = array(
             '#type' => 'textfield',
             '#title' => t('Site ID'),
@@ -58,14 +70,12 @@ function _cgsettings($settings = null, $base, $payment)
             '#default_value' => $settings['merchantkey'],
             '#required' => TRUE
         );
-        $form['server'] = array(
-            '#type' => 'radios',
-            '#title' => t('Testmode'),
-            '#options' => array(
-                'testmode' => ('Testmode - use for testing'),
-                'live' => ('Live - use for processing real transactions')
-            ),
-            '#default_value' => $settings['server']
+        $form['checkoutview'] = array(
+            '#type' => 'select',
+            '#title' => t('Checkout view'),
+            '#description' => t('Choose the way you want the payment methods displayed in the checkout.'),
+            '#options' => $options['checkoutview'],
+            '#default_value' => (empty($settings['checkoutview']) ? 'text' : $settings['checkoutview'])
         );
     }
     $form['omschrijving'] = array(
@@ -77,14 +87,12 @@ function _cgsettings($settings = null, $base, $payment)
     );
     
     $form['omschrijving'] = array(
-        '#markup' => 'The conditions for displaying a payment method can you set with the payment conditions.'
+        '#markup' => 'You can set the conditions for displaying a payment method with the payment conditions.'
     );
     return $form;
 }
 
-function _cgbetaling($order, $payment_method)
-
-
+function _cgbetaling($order, $payment_method) 
 {
     // Load the payment method instance and determine availability.
     // $payment_method = commerce_payment_method_load($method_id);
@@ -137,7 +145,7 @@ function _cgbetaling($order, $payment_method)
         if ('ideal' == $option) {
             $oTransaction->setIssuer($order->data['bankkeuze']);
         }
-       
+        
         // Configure customer.
         $oConsumer = $oTransaction->getConsumer();
         $oConsumer->setEmail($order->mail);
@@ -152,39 +160,37 @@ function _cgbetaling($order, $payment_method)
             $oConsumer->address()->setCountry($billing_address['country']);
         }
         
-        
         // cart items
         $tax_rate = 0;
-        if ( module_exists( 'commerce_tax' ) ) {
+        if (module_exists('commerce_tax')) {
             $taxes = commerce_tax_rates();
-            foreach ( $taxes as $tax_name => $tax_data ) {
+            foreach ($taxes as $tax_name => $tax_data) {
                 $tax_rate += $tax_data['rate'];
             }
         }
         
-        //collect cartitems
+        // collect cartitems
         $items = [];
         $nr = 0;
         $cartitems = array();
         $orderitems = $order->commerce_line_items['und'];
         
-        foreach ( $orderitems as $line ) {
-            $line_item = commerce_line_item_load( $line['line_item_id'] );
-            
+        foreach ($orderitems as $line) {
+            $line_item = commerce_line_item_load($line['line_item_id']);
             
             rules_invoke_event('commerce_product_calculate_sell_price', $line_item);
             
-            if ( $line_item ) {
-                if ( $line_item->type == 'product' ) {
+            if ($line_item) {
+                if ($line_item->type == 'product') {
                     $product_id = $line_item->commerce_product['und'][0]['product_id'];
-                    $product = commerce_product_load( $product_id );
-                    //$price_data = entity_metadata_wrapper( 'commerce_product', $product )->commerce_price->value();
+                    $product = commerce_product_load($product_id);
+                    // $price_data = entity_metadata_wrapper( 'commerce_product', $product )->commerce_price->value();
                     $price_data = entity_metadata_wrapper('commerce_line_item', $line_item)->commerce_unit_price->value();
                     $price = $price_data['amount'];
                     $vat = 0;
                     $vat_amount = $price;
                     
-                    if ( $tax_rate > 0 ) {
+                    if ($tax_rate > 0) {
                         $price = $price * (1 + $tax_rate);
                         $vat = $tax_rate * 100;
                         $vat_amount = $price * $tax_rate;
@@ -194,26 +200,25 @@ function _cgbetaling($order, $payment_method)
                     $items[$nr]['model'] = $product->sku;
                     $items[$nr]['name'] = $product->title;
                     $items[$nr]['quantity'] = $line_item->quantity;
-                    $items[$nr]['price_wt'] = round( $price, 0 );
+                    $items[$nr]['price_wt'] = round($price, 0);
                     $items[$nr]['vat'] = $vat;
-                    $items[$nr]['vat_amount'] = round( $vat_amount, 0 );
+                    $items[$nr]['vat_amount'] = round($vat_amount, 0);
                     $items[$nr]['vat_inc'] = 1;
                 }
             }
             
-            
-            if ( $line_item->type == 'shipping' ) {
+            if ($line_item->type == 'shipping') {
                 
                 $data = $line_item->data;
-                if ( $data['shipping_service']['shipping_method'] == 'flat_rate' ) {
-                    $price = round( floatval( $line_item->commerce_unit_price['und'][0]['amount'] ), 0 );
+                if ($data['shipping_service']['shipping_method'] == 'flat_rate') {
+                    $price = round(floatval($line_item->commerce_unit_price['und'][0]['amount']), 0);
                     $vat = 0;
                     $vat_amount = 0;
-                    if ( $tax_rate > 0 ) {
+                    if ($tax_rate > 0) {
                         $vat = $tax_rate * 100;
                         $vat_amount = $price / (1 + $tax_rate) * $tax_rate;
                     }
-                    $nr++;
+                    $nr ++;
                     $items[$nr]['type'] = 'shipping';
                     $items[$nr]['model'] = $line_item->line_item_label;
                     $items[$nr]['name'] = $line_item->line_item_label;
@@ -226,38 +231,37 @@ function _cgbetaling($order, $payment_method)
             }
         }
         
-        if ( count( $items ) > 0 ) {
+        if (count($items) > 0) {
             $carttotal = 0;
-            foreach ( $cartitems as $key => $cartitem ) {
-                foreach ($cartitem as $cartitemtype => $value){
-                    if ($cartitemtype == 'price_wt'){
-                        $carttotal +=$value;
+            foreach ($cartitems as $key => $cartitem) {
+                foreach ($cartitem as $cartitemtype => $value) {
+                    if ($cartitemtype == 'price_wt') {
+                        $carttotal += $value;
                     }
                 }
-                
             }
             
-            if ( $aArgs['amount'] < $carttotal ) {
+            if ($aArgs['amount'] < $carttotal) {
                 $discount = $aArgs['amount'] - $carttotal;
                 $vat = 0;
                 $vat_amount = 0;
-                if ( $tax_rate > 0 ) {
+                if ($tax_rate > 0) {
                     $vat = $tax_rate * 100;
                     $vat_amount = $discount / (1 + $tax_rate) * $tax_rate;
-                } 
-                $nr++;
+                }
+                $nr ++;
                 $items[$nr]['type'] = 'product';
                 $items[$nr]['model'] = 'Correction';
                 $items[$nr]['name'] = 'item_correction';
                 $items[$nr]['quantity'] = 1;
                 $items[$nr]['price_wt'] = $iCorrection;
                 $items[$nr]['vat'] = $vat;
-                $items[$nr]['vat_amount'] = round($vat_amount,0);
+                $items[$nr]['vat_amount'] = round($vat_amount, 0);
                 $items[$nr]['vat_inc'] = 0;
             }
         }
-        
-        //add cartitems
+      
+        // add cartitems
         
         $oCart = $oTransaction->getCart();
         
@@ -295,7 +299,8 @@ function _cgbetaling($order, $payment_method)
         
         $oTransaction->register();
         
-        $sActionUrl = $oTransaction->getActionUrl(); var_dump($sActionUrl);
+        $sActionUrl = $oTransaction->getActionUrl();
+        var_dump($sActionUrl);
         
         if (NULL !== $sActionUrl) {
             
@@ -315,8 +320,7 @@ function _cgbetaling($order, $payment_method)
     exit();
 }
 
-function _cgnotify($trxid, $orderid, $payment_method)
-{
+function _cgnotify($trxid, $orderid, $payment_method) {
     $aRequest = $_GET;
     
     /* Drupal 7 query */
@@ -344,7 +348,7 @@ function _cgnotify($trxid, $orderid, $payment_method)
     
     $testMode = ($aRequest['testmode'] == 1 ? FALSE : FALSE);
     $verify = FALSE;
-    try {        
+    try {
         $oCardGate = new \cardgate\api\Client($iMerchantId, $sMerchantApiKey, $testMode);
         $oCardGate->setIp($_SERVER['REMOTE_ADDR']);
         
@@ -472,8 +476,7 @@ function _cgnotify($trxid, $orderid, $payment_method)
     exit();
 }
 
-function commerce_cardgate_get_payment_transaction($trxid, $method_id)
-{
+function commerce_cardgate_get_payment_transaction($trxid, $method_id) {
     $feedback_remote_id = $trxid;
     $query = new EntityFieldQuery();
     
@@ -486,6 +489,18 @@ function commerce_cardgate_get_payment_transaction($trxid, $method_id)
         return $transaction->transaction_id;
     }
     return FALSE;
+}
+
+/**
+ * Functions
+ */
+function _cggetImage($img) {
+    global $base_url;
+    if (file_exists(drupal_get_path('module', 'commerce_cardgate') . '/images/' . $img)) {
+        
+        return '<img width="75px;" height="30px;" src="' . $base_url . '/' . drupal_get_path('module', 'commerce_cardgate') . '/images/' . $img . '" border="0" >';
+    } else
+        return "";
 }
 
 ?>

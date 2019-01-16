@@ -5,9 +5,28 @@ require_once(drupal_get_path('module', 'commerce_cardgate') . '/cardgate/base.ph
 function commerce_cardgate_mistercash_commerce_payment_method_info() {
   $payment_methods = array();
 
-  $icons = commerce_cardgate_icons();
-  $display_title = t('MisterCash');
+  $payment_methods = array();
+  
+  $genericdata = commerce_payment_method_instance_load('generic|commerce_payment_generic');
+  $checkoutview = (isset($genericdata['settings']['checkoutview']) ? $genericdata['settings']['checkoutview'] : 'text');  
+  $genericdata = null;
 
+  $title = t('MisterCash');
+  $img = _cggetImage('bancontact.svg');
+ 
+ switch ($checkoutview){
+ 	case 'logos':
+		$display_title = $img;
+		break;
+	case 'text':
+		$display_title = $title;
+		break;
+	case 'logosandtext':
+		$display_title = $img.' '.$title;
+  		break;
+  }
+  
+  
   $payment_methods['mistercash'] = array(
     'base' => 'commerce_cardgate_mistercash',
     'title' => t('MisterCash'),

@@ -3,10 +3,26 @@
 require_once(drupal_get_path('module', 'commerce_cardgate') . '/cardgate/base.php');
 
 function commerce_cardgate_banktransfer_commerce_payment_method_info() {
-  $payment_methods = array();
+    $payment_methods = array();
+  
+  $genericdata = commerce_payment_method_instance_load('generic|commerce_payment_generic');
+  $checkoutview = (isset($genericdata['settings']['checkoutview']) ? $genericdata['settings']['checkoutview'] : 'text');  
+  $genericdata = null;
 
-  $icons = commerce_cardgate_icons();
-  $display_title = t('Bankoverboeking');
+  $title = t('Banktransfer');
+  $img = _cggetImage('banktransfer.svg');
+ 
+ switch ($checkoutview){
+ 	case 'logos':
+		$display_title = $img;
+		break;
+	case 'text':
+		$display_title = $title;
+		break;
+	case 'logosandtext':
+		$display_title = $img.' '.$title;
+  		break;
+  }
 
   $payment_methods['banktransfer'] = array(
     'base' => 'commerce_cardgate_banktransfer',
@@ -23,6 +39,7 @@ function commerce_cardgate_banktransfer_commerce_payment_method_info() {
 }
 
 function commerce_cardgate_banktransfer_settings_form($settings = NULL) {
+ 
 	$form = _cgsettings($settings, 'commerce_cardgate_banktransfer_', 'banktransfer');
 	
 	$form['currency_code'] = array(
