@@ -29,14 +29,14 @@ function commerce_cardgate_schema() {
         'default' => 0,
       ),
       'status' => array(
-        'description' => 'The Status off a transaction.',
+        'description' => 'The Status of a transaction.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => FALSE,
         'default' => '',
       ),
       'invoicenr' => array(
-        'description' => 'Number off the invoice.',
+        'description' => 'Number of the invoice.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => FALSE,
