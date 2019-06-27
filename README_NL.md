@@ -16,9 +16,7 @@ of neem hiervoor contact op met je accountmanager.
 
 1. Download en unzip de meest recente [source code](https://github.com/cardgate/drupal-commerce/releases) op je bureaublad.
 
-2. Upload de **commerce_cardgate** map naar de **Drupal modules** map, die je hier kunt vinden:  
-   **http://mywebshop.com/htdocs/sites/all/modules/**    
-   (Vervang **http://mywebshop.com** met de URL van je webshop.)
+2. Upload de **inhoud** van het zip bestand naar de **root** van je webshop.
 
 
 ## Configuratie

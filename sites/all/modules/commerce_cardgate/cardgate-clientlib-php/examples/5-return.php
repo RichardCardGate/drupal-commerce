@@ -17,7 +17,7 @@ try {
 	}
 
 	// Print status.
-	echo "transaction has status: <strong>{$aOrderData['status']}</strong><br><a href=\"1-payment.php\">new transaction</a>";
+	echo ">new transaction</a>";
 
 } catch ( cardgate\api\Exception $oException_ ) {
 	echo htmlspecialchars( $oException_->getMessage() );
