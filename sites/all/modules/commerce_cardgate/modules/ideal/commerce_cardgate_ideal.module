@@ -146,11 +146,6 @@ function commerce_cardgate_check_bank_options($issuerRefresh) {
     
 function commerce_cardgate_cache_bank_options() {
 
-    $iCacheTime = 24 * 60 * 60;
-    $iIssuerRefresh = time() + $iCacheTime;
-    $params['issuerrefresh'] = $iIssuerRefresh;
-    variable_set('commerce_cardgate_issuerrefresh', $iIssuerRefresh);
-    
     $genericdata = commerce_payment_method_instance_load( 'generic|commerce_payment_generic' );
     $genericsettings = $genericdata['settings'];
     $issuerRefresh = 1000;
@@ -188,5 +183,12 @@ function commerce_cardgate_cache_bank_options() {
     }
    
     $issuers = serialize($aOptions);
-    variable_set('commerce_cardgate_issuers', $issuers);
+    
+    if (array_key_exists("INGBNL2A", $aOptions)) {
+	    variable_set( 'commerce_cardgate_issuers', $issuers );
+	    $iCacheTime = 24 * 60 * 60;
+	    $iIssuerRefresh = time() + $iCacheTime;
+	    $params['issuerrefresh'] = $iIssuerRefresh;
+	    variable_set('commerce_cardgate_issuerrefresh', $iIssuerRefresh);
+    }
 }
