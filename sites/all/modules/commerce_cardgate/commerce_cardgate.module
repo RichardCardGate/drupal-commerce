@@ -97,7 +97,8 @@ function commerce_cardgate_icons() {
     'paysafecash' => t('Paysafecash'),
     'przelewy24' => t('Przelewy'),
     'sofortbanking' => t('SOFORTbanking'),
-    'sofortpay' => t('SofortPay')
+    'sofortpay' => t('SofortPay'),
+    'onlineueberweisen' => t('OnlineÜberweisen')
   );
 
   foreach ($payment_methods as $name => $title) {
@@ -109,7 +110,6 @@ function commerce_cardgate_icons() {
         'class' => array('commerce-paypal-icon'),
       ),
     );
-   // $icons[$name] = theme('image', $variables);
   }
 
   return $icons;
