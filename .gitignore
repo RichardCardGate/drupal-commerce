@@ -1,3 +1,15 @@
 *
 !.gitignore
 !sites/all/modules/commerce_cardgate
+!README_NL.md
+!README_DE.md
+!README.md
+!tests/
+!tests/bootstrap.php
+!tests/phpunit.xml
+!README.md
+!README_DE.md
+!README_NL.md
+!composer.json
+!.travis.yml
+!phpunit.xml.dist
