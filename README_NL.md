@@ -2,14 +2,16 @@
 
 # CardGate module voor Drupal Commerce
 
+[![Build Status](https://travis-ci.org/cardgate/drupal-commerce.svg?branch=master)](https://travis-ci.org/cardgate/drupal-commerce)
+
 ## Support
 
 Deze betaalmodule ondersteunt Drupal versie **7.x** en maakt gebruik van Commerce versie **1.x**
 
 ## Voorbereiding
 
-Voor het gebruik van deze module zijn CardGate RESTful gegevens nodig.  
-Bezoek hiervoor [Mijn CardGate](https://my.cardgate.com/) en haal daar je gegevens op,  
+Voor het gebruik van deze module zijn CardGate RESTful gegevens nodig.
+Bezoek hiervoor [Mijn CardGate](https://my.cardgate.com/) en haal daar je gegevens op,
 of neem hiervoor contact op met je accountmanager.
 
 ## Installatie
@@ -31,7 +33,7 @@ of neem hiervoor contact op met je accountmanager.
 
 4. Klik bij **CardGate Generic** op de **Edit** link.
    Klik bij **Actions** op de **Edit** link.
-   
+
 5. Vul de **site ID** en **hash key** in, deze kun je vinden bij **Sites** op [Mijn CardGate](https://my.cardgate.com/).
 
 6. Vul de **merchant ID** en **API key** in die je van CardGate hebt ontvangen.
@@ -40,10 +42,10 @@ of neem hiervoor contact op met je accountmanager.
 
 8. Ga terug naar het **admin** gedeelte van je webshop en selecteer **Store, Configuration, Payment methods**.
 
-9. Selecteer in de lijst **Niet ingeschakelde betaalmethoden** de betaalmethode die je wenst te activeren en klik op de **Edit** link.  
-    Klik bij **Actions** op de **Edit** link.   
-    Selecteer de juiste **Valuta** en **sla het op**.  
-    
+9. Selecteer in de lijst **Niet ingeschakelde betaalmethoden** de betaalmethode die je wenst te activeren en klik op de **Edit** link.
+    Klik bij **Actions** op de **Edit** link.
+    Selecteer de juiste **Valuta** en **sla het op**.
+
 10. Vink bij **Settings** het **Active** vinkje aan zodat de betaalmethode zichtbaar wordt in het checkout gedeelte van je webshop.
 
 11. Herhaal de **stappen 9 en 10** voor iedere betaalmethode die je wenst te activeren.
