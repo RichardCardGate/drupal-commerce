@@ -16,9 +16,9 @@ of neem hiervoor contact op met je accountmanager.
 
 ## Installatie
 
-1. Download en unzip de meest recente [source code](https://github.com/cardgate/drupal-commerce/releases) op je bureaublad.
+1. Download en unzip de meest recente [cardgate.zip](https://github.com/cardgate/drupal-commerce/releases) op je bureaublad.
 
-2. Upload de **inhoud** van het zip bestand naar de **root** van je webshop.
+2. Upload de **sites** map van het zip bestand naar de **root** map van je webshop.
 
 
 ## Configuratie
