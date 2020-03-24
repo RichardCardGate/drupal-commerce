@@ -15,9 +15,9 @@ Gehen zu [My CardGate](https://my.cardgate.com/) und fragen Sie Ihre Zugangsdate
 
 ## Installation
 
-1. Downloaden und entpacken Sie den aktuellsten [Source Code](https://github.com/cardgate/drupal-commerce/releases/) auf Ihrem Desktop.
+1. Downloaden und entpacken Sie den aktuellsten [cardgate.zip](https://github.com/cardgate/drupal-commerce/releases/) Datei auf Ihrem Desktop.
 
-2. Uploaden Sie den **Inhalt** der Zip-Datei in den **Root-Ordner** auf Ihrem Webshop.
+2. Uploaden Sie den **Sites-Ordner** der Zip-Datei in den **Root-Ordner** auf Ihrem Webshop.
 
 ## Configuration
 
