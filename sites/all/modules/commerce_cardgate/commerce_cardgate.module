@@ -59,7 +59,7 @@ function commerce_cardgate_notify_url($method_id = NULL) {
  * @return
  *   TRUE or FALSE indicating whether the IPN was successfully processed or not.
  */
-function commerce_cardgate_process_notify($payment_method) 
+function commerce_cardgate_process_notify($payment_method)
 {
         $trxid = $_REQUEST['transaction'];
         $reference = $_REQUEST['reference'];
@@ -98,7 +98,8 @@ function commerce_cardgate_icons() {
     'przelewy24' => t('Przelewy'),
     'sofortbanking' => t('SOFORTbanking'),
     'sofortpay' => t('SofortPay'),
-    'onlineueberweisen' => t('OnlineÜberweisen')
+    'onlineueberweisen' => t('OnlineÜberweisen'),
+    'spraypay' => t('SprayPay')
   );
 
   foreach ($payment_methods as $name => $title) {
