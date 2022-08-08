@@ -4,14 +4,14 @@ require_once(drupal_get_path('module', 'commerce_cardgate') . '/cardgate/base.ph
 
 function commerce_cardgate_klarna_commerce_payment_method_info() {
   $payment_methods = array();
-  
+
   $genericdata = commerce_payment_method_instance_load('generic|commerce_payment_generic');
-  $checkoutview = (isset($genericdata['settings']['checkoutview']) ? $genericdata['settings']['checkoutview'] : 'text');  
+  $checkoutview = (isset($genericdata['settings']['checkoutview']) ? $genericdata['settings']['checkoutview'] : 'text');
   $genericdata = null;
 
   $title = t('Klarna');
   $img = _cggetImage('klarna.svg');
- 
+
  switch ($checkoutview){
  	case 'logos':
 		$display_title = $img;
@@ -23,10 +23,10 @@ function commerce_cardgate_klarna_commerce_payment_method_info() {
 		$display_title = $img.' '.$title;
   		break;
   }
-  
+
   $payment_methods['klarna'] = array(
     'base' => 'commerce_cardgate_klarna',
-    'title' => t('Klarna'),
+    'title' => $title,
     'short_title' => t('Klarna'),
     'display_title' => $display_title,
     'description' => t('Klarna betaling'),
@@ -40,20 +40,20 @@ function commerce_cardgate_klarna_commerce_payment_method_info() {
 
 function commerce_cardgate_klarna_settings_form($settings = NULL) {
 	$form = _cgsettings($settings, 'commerce_cardgate_klarna_', 'klarna');
-	
+
 	$form['currency_code'] = array(
 		'#type' => 'select',
 		'#title' => t('Currency'),
 		'#description' => t('Transactions can only be processed in one of the listed currencies.'),
-            
+
 		'#options' => commerce_cardgate_klarna_currencies(),
 		'#default_value' =>(empty($settings['currency_code'])? '':$settings['currency_code']),
 	);
 
 	return $form;
 }
- 
-function commerce_cardgate_klarna_redirect_form($form, &$form_state, $order, $payment_method) 
+
+function commerce_cardgate_klarna_redirect_form($form, &$form_state, $order, $payment_method)
 {
 	_cgbetaling($order, $payment_method) ;
 }

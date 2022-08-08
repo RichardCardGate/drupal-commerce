@@ -4,14 +4,14 @@ require_once(drupal_get_path('module', 'commerce_cardgate') . '/cardgate/base.ph
 
 function commerce_cardgate_giropay_commerce_payment_method_info() {
   $payment_methods = array();
-  
+
   $genericdata = commerce_payment_method_instance_load('generic|commerce_payment_generic');
-  $checkoutview = (isset($genericdata['settings']['checkoutview']) ? $genericdata['settings']['checkoutview'] : 'text');  
+  $checkoutview = (isset($genericdata['settings']['checkoutview']) ? $genericdata['settings']['checkoutview'] : 'text');
   $genericdata = null;
 
   $title = t('Giropay');
   $img = _cggetImage('giropay.svg');
- 
+
  switch ($checkoutview){
  	case 'logos':
 		$display_title = $img;
@@ -26,7 +26,7 @@ function commerce_cardgate_giropay_commerce_payment_method_info() {
 
   $payment_methods['giropay'] = array(
     'base' => 'commerce_cardgate_giropay',
-    'title' => t('Giropay'),
+    'title' => $title,
     'short_title' => t('Giropay'),
     'display_title' => $display_title,
     'description' => t('Giropay betaling'),
@@ -38,9 +38,9 @@ function commerce_cardgate_giropay_commerce_payment_method_info() {
   return $payment_methods;
 }
 
-function commerce_cardgate_giropay_settings_form($settings = NULL) { 
+function commerce_cardgate_giropay_settings_form($settings = NULL) {
 	$form = _cgsettings($settings, 'commerce_cardgate_giropay_', 'giropay');
-	
+
 	$form['currency_code'] = array(
 		'#type' => 'select',
 		'#title' => t('Currency'),
@@ -51,8 +51,8 @@ function commerce_cardgate_giropay_settings_form($settings = NULL) {
 
 	return $form;
 }
- 
-function commerce_cardgate_giropay_redirect_form($form, &$form_state, $order, $payment_method) 
+
+function commerce_cardgate_giropay_redirect_form($form, &$form_state, $order, $payment_method)
 {
 	_cgbetaling($order, $payment_method) ;
 }
