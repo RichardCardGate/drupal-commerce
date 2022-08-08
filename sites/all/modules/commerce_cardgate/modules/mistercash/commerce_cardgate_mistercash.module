@@ -6,14 +6,14 @@ function commerce_cardgate_mistercash_commerce_payment_method_info() {
   $payment_methods = array();
 
   $payment_methods = array();
-  
+
   $genericdata = commerce_payment_method_instance_load('generic|commerce_payment_generic');
-  $checkoutview = (isset($genericdata['settings']['checkoutview']) ? $genericdata['settings']['checkoutview'] : 'text');  
+  $checkoutview = (isset($genericdata['settings']['checkoutview']) ? $genericdata['settings']['checkoutview'] : 'text');
   $genericdata = null;
 
   $title = t('MisterCash');
   $img = _cggetImage('bancontact.svg');
- 
+
  switch ($checkoutview){
  	case 'logos':
 		$display_title = $img;
@@ -25,11 +25,11 @@ function commerce_cardgate_mistercash_commerce_payment_method_info() {
 		$display_title = $img.' '.$title;
   		break;
   }
-  
-  
+
+
   $payment_methods['mistercash'] = array(
     'base' => 'commerce_cardgate_mistercash',
-    'title' => t('MisterCash'),
+    'title' => $title,
     'short_title' => t('MisterCash'),
     'display_title' => $display_title,
     'description' => t('MisterCash betaling'),
@@ -53,9 +53,9 @@ function commerce_cardgate_mistercash_settings_form($settings = NULL) {
 
 	return $form;
 }
- 
-function commerce_cardgate_mistercash_redirect_form($form, &$form_state, $order, $payment_method) 
-{ 
+
+function commerce_cardgate_mistercash_redirect_form($form, &$form_state, $order, $payment_method)
+{
     _cgbetaling($order, $payment_method) ;
 }
 

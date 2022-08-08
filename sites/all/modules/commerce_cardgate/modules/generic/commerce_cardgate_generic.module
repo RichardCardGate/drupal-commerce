@@ -26,12 +26,12 @@ function commerce_cardgate_generic_settings_form($settings = NULL) {
 	$form = _cgsettings($settings, 'commerce_cardgate_generic_', 'generic');
 	return $form;
 }
- 
+
 
 /**
  * Returns an array of all possible language codes.
  */
- 
+
 function commerce_cardgate_generic_languages() {
   return drupal_map_assoc(array('AU', 'DE', 'FR', 'IT', 'GB', 'ES', 'US'));
 }

@@ -3,31 +3,33 @@
 require_once(drupal_get_path('module', 'commerce_cardgate') . '/cardgate/base.php');
 
 function commerce_cardgate_directdebit_commerce_payment_method_info() {
-  
-    $payment_methods = array();
-  
-  $genericdata = commerce_payment_method_instance_load('generic|commerce_payment_generic');
-  $checkoutview = (isset($genericdata['settings']['checkoutview']) ? $genericdata['settings']['checkoutview'] : 'text');  
-  $genericdata = null;
+  $data = db_query('SELECT data FROM {rules_config} WHERE name = :name', array(':name' => 'commerce_payment_generic'))->fetchField(0);
+  $obj = unserialize($data);
+  $array = (array)$obj;
+  $prefix = chr(0).'*'.chr(0);
+  $children = $array[$prefix.'children'];
+  $settings = $children[0]->settings['payment_method']['settings'];
+  $checkoutview = isset($settings['checkoutiew']) ? $settings['checkoutiew'] : 'text';
 
-  $title = t('Direct Debit');
+  $title = t('DirectDebit');
   $img = _cggetImage('directdebit.svg');
- 
- switch ($checkoutview){
- 	case 'logos':
-		$display_title = $img;
-		break;
-	case 'text':
-		$display_title = $title;
-		break;
-	case 'logosandtext':
-		$display_title = $img.' '.$title;
-  		break;
+
+  switch ($checkoutview){
+    case 'logos':
+      $display_title = $img;
+      break;
+    case 'text':
+      $display_title = $title;
+      break;
+    case 'logosandtext':
+      $display_title = $img.' '.$title;
+      break;
   }
 
+  $payment_methods = array();
   $payment_methods['directdebit'] = array(
     'base' => 'commerce_cardgate_directdebit',
-    'title' => t('Incasso'),
+    'title' => $title,
     'short_title' => t('Incasso'),
     'display_title' => $display_title,
     'description' => t('Incasso betaling'),
@@ -41,7 +43,7 @@ function commerce_cardgate_directdebit_commerce_payment_method_info() {
 
 function commerce_cardgate_directdebit_settings_form($settings = NULL) {
 	$form = _cgsettings($settings, 'commerce_cardgate_directdebit_', 'directdebit');
-	
+
 	$form['currency_code'] = array(
 		'#type' => 'select',
 		'#title' => t('Currency'),
@@ -52,8 +54,8 @@ function commerce_cardgate_directdebit_settings_form($settings = NULL) {
 
 	return $form;
 }
- 
-function commerce_cardgate_directdebit_redirect_form($form, &$form_state, $order, $payment_method) 
+
+function commerce_cardgate_directdebit_redirect_form($form, &$form_state, $order, $payment_method)
 {
 	_cgbetaling($order, $payment_method) ;
 }

@@ -3,22 +3,22 @@
 require_once (drupal_get_path('module', 'commerce_cardgate') . '/cardgate-clientlib-php/src/Autoloader.php');
 cardgate\api\Autoloader::register();
 
-function _cgsettings($settings = null, $base, $payment) {
-    
+function _cgsettings($settings, $base, $payment) {
+
     // reset bank issuers cache
     variable_set('commerce_cardgate_issuerrefresh',0);
     $form = array();
     $currencies = $base . 'currencies';
     // Merge default settings into the stored settings array.
     $default_currency = variable_get('commerce_default_currency', 'EUR');
-    
+
     $options['checkoutview']['logos'] = "Logo's";
     $options['checkoutview']['text'] = 'Text';
     $options['checkoutview']['logosandtext'] = "Logo's and Text";
-    
+
     $settings['gatewayurl'] = 'secure.curopayments.net';
     $settings['testgatewayurl'] = 'secure-staging.curopayments.net';
-    
+
     $settings = (array) $settings + array(
         'merchantid' => '',
         'merchantkey' => '',
@@ -88,22 +88,20 @@ function _cgsettings($settings = null, $base, $payment) {
         '#default_value' => $settings['omschrijving'],
         '#required' => TRUE
     );
-    
+
     $form['omschrijving'] = array(
         '#markup' => 'You can set the conditions for displaying a payment method with the payment conditions.'
     );
     return $form;
 }
 
-function _cgbetaling($order, $payment_method) 
+function _cgbetaling($order, $payment_method)
 {
-    // Load the payment method instance and determine availability.
-    // $payment_method = commerce_payment_method_load($method_id);
-    //
+
     // load generic variables
     $genericdata = commerce_payment_method_instance_load('generic|commerce_payment_generic');
     $genericsettings = $genericdata['settings'];
-    
+
     if ($genericdata) {
         $merchantid = (int) $genericsettings['merchantid'];
         $merchantkey = $genericsettings['merchantkey'];
@@ -115,44 +113,44 @@ function _cgbetaling($order, $payment_method)
             $testmode = FALSE;
         }
     }
-    
+
     try {
         // Return an error if the enabling action's settings haven't been configured.
         if (empty($merchantid) || empty($merchantkey)) {
             drupal_set_message($payment_method['title'] . t(": generic module isn't configured yet."), 'error');
             return array();
         }
-        
+
         $oCardGate = new \cardgate\api\Client($merchantid, $merchantkey, $testmode);
         $oCardGate->setIp($_SERVER['REMOTE_ADDR']);
-        
+
         $shop_data = system_get_info('module', 'commerce');
         $plugin_data = system_get_info('module', 'commerce_cardgate');
-        
+
         $oCardGate->version()->setPlatformName('Drupal7_commerce');
         $oCardGate->version()->setPlatformVersion($shop_data['version']);
         $oCardGate->version()->setPluginName('drupal_commerce');
         $oCardGate->version()->setPluginVersion($plugin_data['version']);
-        
+
         $order_wrapper = entity_metadata_wrapper('commerce_order', $order);
         $order_total = $order_wrapper->commerce_order_total->value();
-        
+
         $amount = (int) $order_total['amount'];
         $currency = $order_total['currency_code'];
-        $option = $payment_method['settings']['paymentcode'];
-        
+        $option = $payment_method['method_id'];
+
         $oTransaction = $oCardGate->transactions()->create($siteid, $amount, $currency);
-        
+
         // Configure payment option.
         $oTransaction->setPaymentMethod($option);
         if ('ideal' == $option) {
             $oTransaction->setIssuer($order->data['bankkeuze']);
         }
-        
+
         // Configure customer.
         $oConsumer = $oTransaction->getConsumer();
         $oConsumer->setEmail($order->mail);
-        
+
         if (! empty($order_wrapper->commerce_customer_billing->commerce_customer_address)) {
             $billing_address = $order_wrapper->commerce_customer_billing->commerce_customer_address->value();
             $oConsumer->address()->setFirstName($billing_address['first_name']);
@@ -162,7 +160,7 @@ function _cgbetaling($order, $payment_method)
             $oConsumer->address()->setZipCode($billing_address['postal_code']);
             $oConsumer->address()->setCountry($billing_address['country']);
         }
-        
+
         // cart items
         $tax_rate = 0;
         if (module_exists('commerce_tax')) {
@@ -171,18 +169,18 @@ function _cgbetaling($order, $payment_method)
                 $tax_rate += $tax_data['rate'];
             }
         }
-        
+
         // collect cartitems
         $items = [];
         $nr = 0;
         $cartitems = array();
         $orderitems = $order->commerce_line_items['und'];
-        
+
         foreach ($orderitems as $line) {
             $line_item = commerce_line_item_load($line['line_item_id']);
-            
+
             rules_invoke_event('commerce_product_calculate_sell_price', $line_item);
-            
+
             if ($line_item) {
                 if ($line_item->type == 'product') {
                     $product_id = $line_item->commerce_product['und'][0]['product_id'];
@@ -192,7 +190,7 @@ function _cgbetaling($order, $payment_method)
                     $price = $price_data['amount'];
                     $vat = 0;
                     $vat_amount = $price;
-                    
+
                     if ($tax_rate > 0) {
                         $price = $price * (1 + $tax_rate);
                         $vat = $tax_rate * 100;
@@ -209,9 +207,9 @@ function _cgbetaling($order, $payment_method)
                     $items[$nr]['vat_inc'] = 1;
                 }
             }
-            
+
             if ($line_item->type == 'shipping') {
-                
+
                 $data = $line_item->data;
                 if ($data['shipping_service']['shipping_method'] == 'flat_rate') {
                     $price = round(floatval($line_item->commerce_unit_price['und'][0]['amount']), 0);
@@ -233,7 +231,7 @@ function _cgbetaling($order, $payment_method)
                 }
             }
         }
-        
+
         if (count($items) > 0) {
             $carttotal = 0;
             foreach ($cartitems as $key => $cartitem) {
@@ -243,7 +241,7 @@ function _cgbetaling($order, $payment_method)
                     }
                 }
             }
-            
+
             if ($aArgs['amount'] < $carttotal) {
                 $discount = $aArgs['amount'] - $carttotal;
                 $vat = 0;
@@ -263,13 +261,13 @@ function _cgbetaling($order, $payment_method)
                 $items[$nr]['vat_inc'] = 0;
             }
         }
-      
+
         // add cartitems
-        
+
         $oCart = $oTransaction->getCart();
-        
+
         foreach ($items as $item) {
-            
+
             switch ($item['type']) {
                 case 'product':
                     $iItemType = \cardgate\api\Item::TYPE_PRODUCT;
@@ -284,39 +282,39 @@ function _cgbetaling($order, $payment_method)
                     $iItemType = \cardgate\api\Item::TYPE_DISCOUNT;
                     break;
             }
-            
+
             $oItem = $oCart->addItem($iItemType, $item['model'], $item['name'], (int) $item['quantity'], (int) $item['price_wt']);
             $oItem->setVat($item['vat']);
             $oItem->setVatAmount($item['vat_amount']);
             $oItem->setVatIncluded($item['vat_inc']);
         }
-        
+
         $oTransaction->setCallbackUrl(commerce_cardgate_notify_url() . '/' . $payment_method['instance_id']);
         $oTransaction->setSuccessUrl(commerce_cardgate_notify_url() . '/' . $payment_method['instance_id']);
         $oTransaction->setFailureUrl(url('checkout/' . $order->order_id . '/payment/back/' . $order->data['payment_redirect_key'], array(
             'absolute' => TRUE
         )));
-        
+
         $oTransaction->setReference('O' . time() . '_' . $order->order_number);
         $oTransaction->setDescription('Order ' . $order->order_number);
-        
+
         $oTransaction->register();
-        
+
         $sActionUrl = $oTransaction->getActionUrl();
         var_dump($sActionUrl);
-        
+
         if (NULL !== $sActionUrl) {
-            
+
             drupal_goto(trim($sActionUrl));
             return true;
         } else {
             drupal_set_message(t('CardGate error: ' . htmlspecialchars($oException_->getMessage())), 'error');
         }
     } catch (cardgate\api\Exception $oException_) {
-        
+
         drupal_set_message(t('CardGate error: ' . htmlspecialchars($oException_->getMessage())), 'error');
     }
-    
+
     // on error
     unset($order->data['payment_method']);
     commerce_payment_redirect_pane_previous_page($order, t('Redirect to Payment method failed.'));
@@ -325,7 +323,7 @@ function _cgbetaling($order, $payment_method)
 
 function _cgnotify($trxid, $orderid, $payment_method) {
     $aRequest = $_GET;
-    
+
     /* Drupal 7 query */
     $query = db_select('commerce_cardgate', 's');
     $query->condition('s.trxid', $trxid, '=')
@@ -334,27 +332,27 @@ function _cgnotify($trxid, $orderid, $payment_method) {
     ))
         ->range(0, 50);
     $result = $query->execute();
-    
+
     $order = commerce_order_load($orderid);
-    
+
     $genericdata = commerce_payment_method_instance_load('generic|commerce_payment_generic');
     $genericsettings = $genericdata['settings'];
     $siteid = '';
     $gatewayurl = '';
-    
+
     if ($genericdata) {
         $iMerchantId = (int) $genericsettings['merchantid'];
         $sMerchantApiKey = $genericsettings['merchantkey'];
         $sHashkey = $genericsettings['hashkey'];
         $siteid = $genericsettings['siteid'];
     }
-    
+
     $testMode = ($aRequest['testmode'] == 1 ? FALSE : FALSE);
     $verify = FALSE;
     try {
         $oCardGate = new \cardgate\api\Client($iMerchantId, $sMerchantApiKey, $testMode);
         $oCardGate->setIp($_SERVER['REMOTE_ADDR']);
-        
+
         if (FALSE == $oCardGate->transactions()->verifyCallback($aRequest, $sHashkey)) {
             // false
         } else {
@@ -363,7 +361,7 @@ function _cgnotify($trxid, $orderid, $payment_method) {
     } catch (cardgate\api\Exception $oException_) {
         // false
     }
-    
+
     // process for commerce_cardgate table
     if ($result->rowCount() == 0) {
         $record = array(
@@ -388,17 +386,17 @@ function _cgnotify($trxid, $orderid, $payment_method) {
             );
         }
     }
-    
+
     drupal_write_record('commerce_cardgate', $record, 'trxid');
-    
+
     $redirect = empty($aRequest['hash']);
-    
+
     // process notify url
     if ($verify && ! $redirect) {
-        
+
         $transaction_id = commerce_cardgate_get_payment_transaction($trxid, $payment_method['method_id']);
         $completed = false;
-        
+
         if (! $transaction_id) {
             $transaction = commerce_payment_transaction_new($payment_method['method_id'], $order->order_id);
         } else {
@@ -407,7 +405,7 @@ function _cgnotify($trxid, $orderid, $payment_method) {
                 $completed = true;
             }
         }
-        
+
         if (! $completed) {
             $transaction->instance_id = $payment_method['instance_id'];
             $transaction->remote_id = $trxid;
@@ -415,7 +413,7 @@ function _cgnotify($trxid, $orderid, $payment_method) {
             $transaction->currency_code = $order->commerce_order_total['und']['0']['currency_code'];
             // Set the transaction's statuses based on the IPN's payment_status.
             $transaction->remote_status = $aRequest['code'];
-            
+
             // If we didn't get an approval response code...
             switch ($aRequest['code']) {
                 case 200:
@@ -459,7 +457,7 @@ function _cgnotify($trxid, $orderid, $payment_method) {
                     $transaction->message = t('The payment status is still open.');
                     break;
             }
-            
+
             // Save the transaction information.
             commerce_payment_transaction_save($transaction);
             watchdog($payment_method['base'], 'CardGate Notify processed for Order @order_number with ID @txn_id.', array(
@@ -468,7 +466,7 @@ function _cgnotify($trxid, $orderid, $payment_method) {
             ), WATCHDOG_INFO);
         }
     }
-    
+
     if ($redirect) {
         header('location: ' . url('checkout/' . $order->order_id . '/payment/return/' . $order->data['payment_redirect_key'], array(
             'absolute' => TRUE
@@ -482,7 +480,7 @@ function _cgnotify($trxid, $orderid, $payment_method) {
 function commerce_cardgate_get_payment_transaction($trxid, $method_id) {
     $feedback_remote_id = $trxid;
     $query = new EntityFieldQuery();
-    
+
     $result = $query->entityCondition('entity_type', 'commerce_payment_transaction')
         ->propertyCondition('payment_method', $method_id)
         ->propertyCondition('remote_id', $feedback_remote_id)
@@ -500,7 +498,7 @@ function commerce_cardgate_get_payment_transaction($trxid, $method_id) {
 function _cggetImage($img) {
     global $base_url;
     if (file_exists(drupal_get_path('module', 'commerce_cardgate') . '/images/' . $img)) {
-        
+
         return '<img width="75px;" height="30px;" src="' . $base_url . '/' . drupal_get_path('module', 'commerce_cardgate') . '/images/' . $img . '" border="0" >';
     } else
         return "";

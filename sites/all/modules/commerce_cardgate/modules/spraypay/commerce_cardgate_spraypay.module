@@ -26,7 +26,7 @@ function commerce_cardgate_spraypay_commerce_payment_method_info() {
 
   $payment_methods['spraypay'] = array(
     'base' => 'commerce_cardgate_spraypay',
-    'title' => t('SprayPay'),
+    'title' => $title,
     'short_title' => t('SprayPay'),
     'display_title' => $display_title,
     'description' => t('SprayPay betaling'),

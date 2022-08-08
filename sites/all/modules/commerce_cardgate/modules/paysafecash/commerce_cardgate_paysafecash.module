@@ -4,14 +4,14 @@ require_once(drupal_get_path('module', 'commerce_cardgate') . '/cardgate/base.ph
 
 function commerce_cardgate_paysafecash_commerce_payment_method_info() {
   $payment_methods = array();
-  
+
   $genericdata = commerce_payment_method_instance_load('generic|commerce_payment_generic');
-  $checkoutview = (isset($genericdata['settings']['checkoutview']) ? $genericdata['settings']['checkoutview'] : 'text');  
+  $checkoutview = (isset($genericdata['settings']['checkoutview']) ? $genericdata['settings']['checkoutview'] : 'text');
   $genericdata = null;
 
   $title = t('Paysafecash');
   $img = _cggetImage('paysafecash.svg');
- 
+
  switch ($checkoutview){
  	case 'logos':
 		$display_title = $img;
@@ -23,10 +23,10 @@ function commerce_cardgate_paysafecash_commerce_payment_method_info() {
 		$display_title = $img.' '.$title;
   		break;
   }
-  
+
   $payment_methods['paysafecash'] = array(
     'base' => 'commerce_cardgate_paysafecash',
-    'title' => t('PaySafeCash'),
+    'title' => $title,
     'short_title' => t('PaySafeCash'),
     'display_title' => $display_title,
     'description' => t('PaySafeCash betaling'),
@@ -50,9 +50,9 @@ function commerce_cardgate_paysafecash_settings_form($settings = NULL) {
 
 	return $form;
 }
- 
-function commerce_cardgate_paysafecash_redirect_form($form, &$form_state, $order, $payment_method) 
-{ 
+
+function commerce_cardgate_paysafecash_redirect_form($form, &$form_state, $order, $payment_method)
+{
 	_cgbetaling($order, $payment_method) ;
 }
 

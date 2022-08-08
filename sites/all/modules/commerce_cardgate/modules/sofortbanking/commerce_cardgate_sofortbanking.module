@@ -6,14 +6,14 @@ function commerce_cardgate_sofortbanking_commerce_payment_method_info() {
   $payment_methods = array();
 
   $payment_methods = array();
-  
+
   $genericdata = commerce_payment_method_instance_load('generic|commerce_payment_generic');
-  $checkoutview = (isset($genericdata['settings']['checkoutview']) ? $genericdata['settings']['checkoutview'] : 'text');  
+  $checkoutview = (isset($genericdata['settings']['checkoutview']) ? $genericdata['settings']['checkoutview'] : 'text');
   $genericdata = null;
 
   $title = t('SofortBanking');
   $img = _cggetImage('sofortbanking.svg');
- 
+
  switch ($checkoutview){
  	case 'logos':
 		$display_title = $img;
@@ -25,10 +25,10 @@ function commerce_cardgate_sofortbanking_commerce_payment_method_info() {
 		$display_title = $img.' '.$title;
   		break;
   }
-  
+
   $payment_methods['sofortbanking'] = array(
     'base' => 'commerce_cardgate_sofortbanking',
-    'title' => t('SofortBanking'),
+    'title' => $title,
     'short_title' => t('SofortBanking'),
     'display_title' => $display_title,
     'description' => t('SofortBanking betaling'),
@@ -36,13 +36,13 @@ function commerce_cardgate_sofortbanking_commerce_payment_method_info() {
     'offsite' => TRUE,
     'offsite_autoredirect' => TRUE,
   );
-  
+
   return $payment_methods;
 }
 
 function commerce_cardgate_sofortbanking_settings_form($settings = NULL) {
 	$form = _cgsettings($settings, 'commerce_cardgate_sofortbanking_', 'sofortbanking');
-        
+
 	$form['currency_code'] = array(
 		'#type' => 'select',
 		'#title' => t('Currency'),
@@ -50,11 +50,11 @@ function commerce_cardgate_sofortbanking_settings_form($settings = NULL) {
 		'#options' => commerce_cardgate_sofortbanking_currencies(),
 		'#default_value' => (empty($settings['currency_code'])? '':$settings['currency_code']),
 	);
-        
+
 	return $form;
 }
- 
-function commerce_cardgate_sofortbanking_redirect_form($form, &$form_state, $order, $payment_method) 
+
+function commerce_cardgate_sofortbanking_redirect_form($form, &$form_state, $order, $payment_method)
 {
 	_cgbetaling($order, $payment_method) ;
 }

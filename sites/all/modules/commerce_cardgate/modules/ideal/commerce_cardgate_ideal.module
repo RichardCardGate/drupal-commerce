@@ -4,14 +4,14 @@ require_once(drupal_get_path('module', 'commerce_cardgate') . '/cardgate/base.ph
 
 function commerce_cardgate_ideal_commerce_payment_method_info() {
   $payment_methods = array();
-  
+
   $genericdata = commerce_payment_method_instance_load('generic|commerce_payment_generic');
-  $checkoutview = (isset($genericdata['settings']['checkoutview']) ? $genericdata['settings']['checkoutview'] : 'text');  
+  $checkoutview = (isset($genericdata['settings']['checkoutview']) ? $genericdata['settings']['checkoutview'] : 'text');
   $genericdata = null;
 
   $title = t('iDEAL');
   $img = _cggetImage('ideal.svg');
- 
+
  switch ($checkoutview){
  	case 'logos':
 		$display_title = $img;
@@ -27,7 +27,7 @@ function commerce_cardgate_ideal_commerce_payment_method_info() {
   $payment_methods['ideal'] = array(
     'base' => 'commerce_cardgate_ideal',
     'paymentcode' => 'idealpro',
-    'title' => t('iDEAL'),
+    'title' => $title,
     'short_title' => t('iDEAL'),
     'display_title' => $display_title,
     'description' => t('iDEAL betaling'),
@@ -40,13 +40,13 @@ function commerce_cardgate_ideal_commerce_payment_method_info() {
 }
 
 function commerce_cardgate_ideal_submit_form($payment_method, $pane_values, $checkout_pane, $order) {
-   
+
 	if(isset($checkout_pane))
 	{
 		$issuerRefresh = (int) variable_get('commerce_cardgate_issuerrefresh',0);
-    	commerce_cardgate_check_bank_options($issuerRefresh);  
+    	commerce_cardgate_check_bank_options($issuerRefresh);
 		$aBanks = unserialize(variable_get('commerce_cardgate_issuers', false));
-       	
+
        	$form = array();
 
 		  // Merge in values from the order.
@@ -57,16 +57,16 @@ function commerce_cardgate_ideal_submit_form($payment_method, $pane_values, $che
 		  // Merge in default values.
 		  $pane_values += array(
 			'bankkeuze' => '',
-		  ); 
-			
+		  );
+
 			$form['bankkeuze'] = array(
-			'#type' => 'select', 
-			'#title' => t('Kies uw bank:'), 
-			'#options' => $aBanks, 
-			'#default_value' => $pane_values['bankkeuze'], 
+			'#type' => 'select',
+			'#title' => t('Kies uw bank:'),
+			'#options' => $aBanks,
+			'#default_value' => $pane_values['bankkeuze'],
 			'#required' => TRUE,
 		  );
-			
+
 		  return $form;
 	}
 }
@@ -74,7 +74,7 @@ function commerce_cardgate_ideal_submit_form($payment_method, $pane_values, $che
 function commerce_cardgate_ideal_submit_form_submit($payment_method, $pane_form, $pane_values, $order, $charge) {
 
 	if($pane_form['#id'] == 'edit-payment-details')
-	{	
+	{
 		/* Drupal 7 query */
 		$query = db_select('commerce_cardgate', 's');
 		$query->condition('s.orderid', $order->order_id, '=')
@@ -82,9 +82,9 @@ function commerce_cardgate_ideal_submit_form_submit($payment_method, $pane_form,
 			  ->fields('s', array('trxid'))
 			  ->range(0, 50);
 		$result = $query->execute();
-		
+
 		$trxid = $result->fetchField();
-				
+
 		$transaction = commerce_payment_transaction_new($payment_method['method_id'], $order->order_id);
 		$transaction->instance_id = $payment_method['instance_id'];
 
@@ -114,8 +114,8 @@ function commerce_cardgate_ideal_settings_form($settings = NULL) {
 
 	return $form;
 }
- 
-function commerce_cardgate_ideal_redirect_form($form, &$form_state, $order, $payment_method) 
+
+function commerce_cardgate_ideal_redirect_form($form, &$form_state, $order, $payment_method)
 {
 	_cgbetaling($order, $payment_method);
 }
@@ -143,7 +143,7 @@ function commerce_cardgate_check_bank_options($issuerRefresh) {
         commerce_cardgate_cache_bank_options();
     }
 }
-    
+
 function commerce_cardgate_cache_bank_options() {
 
     $genericdata = commerce_payment_method_instance_load( 'generic|commerce_payment_generic' );
@@ -155,18 +155,18 @@ function commerce_cardgate_cache_bank_options() {
         $sMerchantKey = $genericsettings['merchantkey'];
         $iSiteId = (int)$genericsettings['siteid'];
         $sHashkey = $genericsettings['hashkey'];
-        if ( $genericsettings['server'] == 'testmode' ) {            
+        if ( $genericsettings['server'] == 'testmode' ) {
             $bTestMode = TRUE;
         } else {
             $bTestMode = FALSE;
         }
     }
-    
+
     try {
-      
+
         $oCardGate = new \cardgate\api\Client($iMerchantId, $sMerchantKey, $bTestMode);
         $oCardGate->setIp($_SERVER['REMOTE_ADDR']);
-        
+
         $aIssuers = $oCardGate->methods()
         ->get(cardgate\api\Method::IDEAL)
         ->getIssuers();
@@ -176,12 +176,12 @@ function commerce_cardgate_cache_bank_options() {
             'name' => htmlspecialchars($oException_->getMessage())
         ];
     }
-    
+
     $aOptions = [];
     foreach ($aIssuers as $aIssuer) {
         $aOptions[$aIssuer['id']] = $aIssuer['name'];
     }
-   
+
     $issuers = serialize($aOptions);
 
     if (array_key_exists("INGBNL2A", $aOptions)) {
