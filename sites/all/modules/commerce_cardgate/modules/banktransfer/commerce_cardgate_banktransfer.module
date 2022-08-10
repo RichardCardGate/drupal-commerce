@@ -9,7 +9,7 @@ function commerce_cardgate_banktransfer_commerce_payment_method_info() {
   $prefix = chr(0).'*'.chr(0);
   $children = $array[$prefix.'children'];
   $settings = $children[0]->settings['payment_method']['settings'];
-  $checkoutview = isset($settings['checkoutiew']) ? $settings['checkoutiew'] : 'text';
+  $checkoutview = isset($settings['checkoutview']) ? $settings['checkoutview'] : 'text';
 
   $title = t('Banktransfer');
   $img = _cggetImage('banktransfer.svg');
