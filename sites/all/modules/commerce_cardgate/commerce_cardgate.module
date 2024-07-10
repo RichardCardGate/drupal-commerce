@@ -88,7 +88,6 @@ function commerce_cardgate_icons() {
     'creditcard' => t('CreditCard'),
     'directdebit' => t('Incasso'),
     'giftcard' => t('Gift Card'),
-    'giropay' => t('Giropay'),
     'ideal' => t('iDEAL'),
     'idealqr' => t('iDEAL QR'),
     'klarna' => t('Klarna'),
