@@ -43,30 +43,12 @@ function commerce_cardgate_ideal_submit_form($payment_method, $pane_values, $che
 
 	if(isset($checkout_pane))
 	{
-		$issuerRefresh = (int) variable_get('commerce_cardgate_issuerrefresh',0);
-    	commerce_cardgate_check_bank_options($issuerRefresh);
-		$aBanks = unserialize(variable_get('commerce_cardgate_issuers', false));
-
        	$form = array();
 
 		  // Merge in values from the order.
 		  if (!empty($order->data['commerce_cardgate_ideal'])) {
 			$pane_values += $order->data['commerce_cardgate_ideal'];
 		  }
-
-		  // Merge in default values.
-		  $pane_values += array(
-			'bankkeuze' => '',
-		  );
-
-			$form['bankkeuze'] = array(
-			'#type' => 'select',
-			'#title' => t('Kies uw bank:'),
-			'#options' => $aBanks,
-			'#default_value' => $pane_values['bankkeuze'],
-			'#required' => TRUE,
-		  );
-
 		  return $form;
 	}
 }
@@ -132,63 +114,4 @@ function commerce_cardgate_ideal_languages() {
  */
 function commerce_cardgate_ideal_currencies() {
   return drupal_map_assoc(array('EUR'));
-}
-
-function commerce_cardgate_check_bank_options($issuerRefresh) {
-	if ($issuerRefresh) {
-    	if ($issuerRefresh < time()) {
-        	commerce_cardgate_cache_bank_options();
-		}
-    } else {
-        commerce_cardgate_cache_bank_options();
-    }
-}
-
-function commerce_cardgate_cache_bank_options() {
-
-    $genericdata = commerce_payment_method_instance_load( 'generic|commerce_payment_generic' );
-    $genericsettings = $genericdata['settings'];
-    $issuerRefresh = 1000;
-
-    if ( $genericdata ) {
-        $iMerchantId = (int)$genericsettings['merchantid'];
-        $sMerchantKey = $genericsettings['merchantkey'];
-        $iSiteId = (int)$genericsettings['siteid'];
-        $sHashkey = $genericsettings['hashkey'];
-        if ( $genericsettings['server'] == 'testmode' ) {
-            $bTestMode = TRUE;
-        } else {
-            $bTestMode = FALSE;
-        }
-    }
-
-    try {
-
-        $oCardGate = new \cardgate\api\Client($iMerchantId, $sMerchantKey, $bTestMode);
-        $oCardGate->setIp($_SERVER['REMOTE_ADDR']);
-
-        $aIssuers = $oCardGate->methods()
-        ->get(cardgate\api\Method::IDEAL)
-        ->getIssuers();
-    } catch (cardgate\api\Exception $oException_) {
-        $aIssuers[0] = [
-            'id' => 0,
-            'name' => htmlspecialchars($oException_->getMessage())
-        ];
-    }
-
-    $aOptions = [];
-    foreach ($aIssuers as $aIssuer) {
-        $aOptions[$aIssuer['id']] = $aIssuer['name'];
-    }
-
-    $issuers = serialize($aOptions);
-
-    if (array_key_exists("INGBNL2A", $aOptions)) {
-	    variable_set( 'commerce_cardgate_issuers', $issuers );
-	    $iCacheTime = 24 * 60 * 60;
-	    $iIssuerRefresh = time() + $iCacheTime;
-	    $params['issuerrefresh'] = $iIssuerRefresh;
-	    variable_set('commerce_cardgate_issuerrefresh', $iIssuerRefresh);
-    }
 }

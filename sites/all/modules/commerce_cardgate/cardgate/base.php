@@ -143,9 +143,6 @@ function _cgbetaling($order, $payment_method)
 
         // Configure payment option.
         $oTransaction->setPaymentMethod($option);
-        if ('ideal' == $option) {
-            $oTransaction->setIssuer($order->data['bankkeuze']);
-        }
 
         // Configure customer.
         $oConsumer = $oTransaction->getConsumer();
@@ -241,27 +238,26 @@ function _cgbetaling($order, $payment_method)
                     }
                 }
             }
-
-            if ($aArgs['amount'] < $carttotal) {
-                $discount = $aArgs['amount'] - $carttotal;
-                $vat = 0;
-                $vat_amount = 0;
-                if ($tax_rate > 0) {
-                    $vat = $tax_rate * 100;
-                    $vat_amount = $discount / (1 + $tax_rate) * $tax_rate;
-                }
-                $nr ++;
-                $items[$nr]['type'] = 'product';
-                $items[$nr]['model'] = 'Correction';
-                $items[$nr]['name'] = 'item_correction';
-                $items[$nr]['quantity'] = 1;
-                $items[$nr]['price_wt'] = $iCorrection;
-                $items[$nr]['vat'] = $vat;
-                $items[$nr]['vat_amount'] = round($vat_amount, 0);
-                $items[$nr]['vat_inc'] = 0;
-            }
         }
 
+        if ($amount < $carttotal) {
+            $discount = $amount - $carttotal;
+            $vat = 0;
+            $vat_amount = 0;
+            if ($tax_rate > 0) {
+                $vat = $tax_rate * 100;
+                $vat_amount = $discount / (1 + $tax_rate) * $tax_rate;
+            }
+            $nr ++;
+            $items[$nr]['type'] = 'product';
+            $items[$nr]['model'] = 'Correction';
+            $items[$nr]['name'] = 'item_correction';
+            $items[$nr]['quantity'] = 1;
+            $items[$nr]['price_wt'] = $iCorrection;
+            $items[$nr]['vat'] = $vat;
+            $items[$nr]['vat_amount'] = round($vat_amount, 0);
+            $items[$nr]['vat_inc'] = 0;
+        }
         // add cartitems
 
         $oCart = $oTransaction->getCart();
@@ -301,7 +297,6 @@ function _cgbetaling($order, $payment_method)
         $oTransaction->register();
 
         $sActionUrl = $oTransaction->getActionUrl();
-        var_dump($sActionUrl);
 
         if (NULL !== $sActionUrl) {
 
@@ -375,7 +370,7 @@ function _cgnotify($trxid, $orderid, $payment_method) {
     } else {
         $aResult = $result->fetchAssoc();
         if ($aResult['status'] != '200') {
-            $cardgate->statusRequest($trxid, $testmode);
+            $cardgate->statusRequest($trxid, $testMode);
             $record = array(
                 "trxid" => $trxid,
                 "orderid" => $orderid,
