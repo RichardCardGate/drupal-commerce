@@ -5,8 +5,6 @@ cardgate\api\Autoloader::register();
 
 function _cgsettings($settings, $base, $payment) {
 
-    // reset bank issuers cache
-    variable_set('commerce_cardgate_issuerrefresh',0);
     $form = array();
     $currencies = $base . 'currencies';
     // Merge default settings into the stored settings array.
