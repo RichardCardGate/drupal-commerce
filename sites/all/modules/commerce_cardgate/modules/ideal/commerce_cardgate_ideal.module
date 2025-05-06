@@ -26,12 +26,11 @@ function commerce_cardgate_ideal_commerce_payment_method_info() {
 
   $payment_methods['ideal'] = array(
     'base' => 'commerce_cardgate_ideal',
-    'paymentcode' => 'idealpro',
     'title' => $title,
     'short_title' => t('iDEAL'),
     'display_title' => $display_title,
     'description' => t('iDEAL betaling'),
-    'terminal' => TRUE,
+    'terminal' => FALSE,
     'offsite' => TRUE,
     'offsite_autoredirect' => TRUE,
   );
@@ -77,10 +76,6 @@ function commerce_cardgate_ideal_submit_form_submit($payment_method, $pane_form,
 		$transaction->status = COMMERCE_PAYMENT_STATUS_SUCCESS;
 		$transaction->message = t("Refunded.");
 		commerce_payment_transaction_save($transaction);
-	}
-	else
-	{
-		$order->data['bankkeuze'] = $pane_values['bankkeuze'];
 	}
 }
 
