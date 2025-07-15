@@ -10,7 +10,7 @@ dependencies[] = commerce_order
 ; files[] = tests/commerce_paypal.test
 
 ; Information added by drupal.org packaging script on 2012-02-05
-version = "7.x-7.1.22"
+version = "7.x-7.1.23"
 core = "7.x"
 project = "commerce_cardgate"
 datestamp = "1328400676"
