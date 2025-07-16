@@ -85,6 +85,7 @@ function commerce_cardgate_icons() {
     'banktransfer' => t('Bankoverboeking'),
     'billink' => t('Billink'),
     'bitcoin' => t('Bitcoin'),
+    'crypto' => t('Crypto'),
     'creditcard' => t('CreditCard'),
     'directdebit' => t('Incasso'),
     'giftcard' => t('Gift Card'),

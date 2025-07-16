@@ -48,28 +48,28 @@ function _cgsettings($settings, $base, $payment) {
             '#title' => t('Site ID'),
             '#description' => t('The Site ID from your CardGate account.'),
             '#default_value' => $settings['siteid'],
-            '#required' => TRUE
+            '#required' => true
         );
         $form['hashkey'] = array(
             '#type' => 'textfield',
             '#title' => t('Hash key'),
             '#description' => t('The Hash key from your CardGate account.'),
             '#default_value' => $settings['hashkey'],
-            '#required' => TRUE
+            '#required' => true
         );
         $form['merchantid'] = array(
             '#type' => 'textfield',
             '#title' => t('Merchant ID'),
             '#description' => t('The Merchant ID from your CardGate account.'),
             '#default_value' => $settings['merchantid'],
-            '#required' => TRUE
+            '#required' => true
         );
         $form['merchantkey'] = array(
             '#type' => 'textfield',
             '#title' => t('API key'),
             '#description' => t('The Merchant Key from your CardGate account.'),
             '#default_value' => $settings['merchantkey'],
-            '#required' => TRUE
+            '#required' => true
         );
         $form['checkoutview'] = array(
             '#type' => 'select',
@@ -84,13 +84,43 @@ function _cgsettings($settings, $base, $payment) {
         '#title' => t('Description'),
         '#description' => t('Description in front of the order nr.'),
         '#default_value' => $settings['omschrijving'],
-        '#required' => TRUE
+        '#required' => true
     );
 
     $form['omschrijving'] = array(
         '#markup' => 'You can set the conditions for displaying a payment method with the payment conditions.'
     );
     return $form;
+}
+
+function check_payment_currency($currency,$payment_method) {
+        $strictly_euro = in_array($payment_method,['cardgateideal',
+            'cardgateidealqr',
+            'cardgatebancontact',
+            'cardgatebanktransfer',
+            'cardgatebillink',
+            'cardgatesofortbanking',
+            'cardgatedirectdebit',
+            'cardgateonlineueberweisen',
+            'cardgatespraypay']);
+        if ($strictly_euro && $currency != 'EUR') return false;
+
+        $strictly_pln = in_array($payment_method,['cardgateprzelewy24']);
+        if ($strictly_pln && $currency != 'PLN') return false;
+
+        return true;
+    }
+
+function currency_check($payment_method) {
+    if (strpos($_GET['q'], 'checkout/') === false) return true;
+
+    $order_id       = intval( str_replace('checkout/','',$_GET['q']) );
+    $order          = commerce_order_load($order_id);
+    $order_wrapper  = entity_metadata_wrapper('commerce_order', $order);
+    $order_total    = $order_wrapper->commerce_order_total->value();
+    $currency       = $order_total['currency_code'];
+
+    return check_payment_currency($currency,$payment_method);
 }
 
 function _cgbetaling($order, $payment_method)

@@ -3,36 +3,38 @@
 require_once(drupal_get_path('module', 'commerce_cardgate') . '/cardgate/base.php');
 
 function commerce_cardgate_ideal_commerce_payment_method_info() {
-  $payment_methods = array();
 
-  $genericdata = commerce_payment_method_instance_load('generic|commerce_payment_generic');
-  $checkoutview = (isset($genericdata['settings']['checkoutview']) ? $genericdata['settings']['checkoutview'] : 'text');
-  $genericdata = null;
+    if (!currency_check('cardgateideal')) return [];
 
-  $title = t('iDEAL');
-  $img = _cggetImage('ideal.svg');
+    $payment_methods    = array();
+    $genericdata        = commerce_payment_method_instance_load('generic|commerce_payment_generic');
+    $checkoutview       = (isset($genericdata['settings']['checkoutview']) ? $genericdata['settings']['checkoutview'] : 'text');
+    $genericdata        = null;
 
- switch ($checkoutview){
- 	case 'logos':
-		$display_title = $img;
-		break;
-	case 'text':
-		$display_title = $title;
-		break;
-	case 'logosandtext':
-		$display_title = $img.' '.$title;
-  		break;
-  }
+    $title              = t('iDEAL');
+    $img                = _cggetImage('ideal.svg');
 
-  $payment_methods['ideal'] = array(
-    'base' => 'commerce_cardgate_ideal',
-    'title' => $title,
-    'short_title' => t('iDEAL'),
-    'display_title' => $display_title,
-    'description' => t('iDEAL betaling'),
-    'terminal' => FALSE,
-    'offsite' => TRUE,
-    'offsite_autoredirect' => TRUE,
+    switch ($checkoutview){
+        case 'logos':
+            $display_title = $img;
+            break;
+        case 'text':
+            $display_title = $title;
+            break;
+        case 'logosandtext':
+            $display_title = $img.' '.$title;
+            break;
+    }
+
+    $payment_methods['ideal'] = array(
+        'base'                  => 'commerce_cardgate_ideal',
+        'title'                 => $title,
+        'short_title'           => t('iDEAL'),
+        'display_title'         => $display_title,
+        'description'           => t('iDEAL betaling'),
+        'terminal'              => FALSE,
+        'offsite'               => TRUE,
+        'offsite_autoredirect'  => TRUE,
   );
 
   return $payment_methods;

@@ -2,8 +2,8 @@
 
 require_once(drupal_get_path('module', 'commerce_cardgate') . '/cardgate/base.php');
 
-function commerce_cardgate_banktransfer_commerce_payment_method_info() {
-    if (!currency_check('cardgatebanktransger')) return [];
+function commerce_cardgate_crypto_commerce_payment_method_info() {
+    if (!currency_check('cardgatecrypto')) return [];
   $data = db_query('SELECT data FROM {rules_config} WHERE name = :name', array(':name' => 'commerce_payment_generic'))->fetchField(0);
   $obj = unserialize($data);
   $array = (array)$obj;
@@ -12,8 +12,8 @@ function commerce_cardgate_banktransfer_commerce_payment_method_info() {
   $settings = $children[0]->settings['payment_method']['settings'];
   $checkoutview = isset($settings['checkoutview']) ? $settings['checkoutview'] : 'text';
 
-  $title = t('Banktransfer');
-  $img = _cggetImage('banktransfer.svg');
+  $title = t('Crypto');
+  $img = _cggetImage('crypto.svg');
 
   switch ($checkoutview){
     case 'logos':
@@ -28,13 +28,13 @@ function commerce_cardgate_banktransfer_commerce_payment_method_info() {
   }
 
   $payment_methods = array();
-  $payment_methods['banktransfer'] = array(
-    'base' => 'commerce_cardgate_banktransfer',
+  $payment_methods['crypto'] = array(
+    'base' => 'commerce_cardgate_crypto',
     'title' => $title,
-    'short_title' => t('Bankoverboeking'),
+    'short_title' => t('Crypto'),
     'display_title' => $display_title,
-    'description' => t('Bankoverboeking betaling'),
-    'terminal' => FALSE,
+    'description' => t('Crypto betaling'),
+    'terminal' => TRUE,
     'offsite' => TRUE,
     'offsite_autoredirect' => TRUE,
   );
@@ -42,36 +42,34 @@ function commerce_cardgate_banktransfer_commerce_payment_method_info() {
   return $payment_methods;
 }
 
-function commerce_cardgate_banktransfer_settings_form($settings = NULL) {
-
-	$form = _cgsettings($settings, 'commerce_cardgate_banktransfer_', 'banktransfer');
-
+function commerce_cardgate_crypto_settings_form($settings = NULL) {
+	$form = _cgsettings($settings, 'commerce_cardgate_crypto_', 'crypto');
 	$form['currency_code'] = array(
 		'#type' => 'select',
 		'#title' => t('Currency'),
 		'#description' => t('Transactions can only be processed in one of the listed currencies.'),
-		'#options' => commerce_cardgate_banktransfer_currencies(),
-		'#default_value' =>(empty($settings['currency_code'])? '':$settings['currency_code']),
+		'#options' => commerce_cardgate_crypto_currencies(),
+		'#default_value' => (empty($settings['currency_code'])? '':$settings['currency_code']),
 	);
 
 	return $form;
 }
 
-function commerce_cardgate_banktransfer_redirect_form($form, &$form_state, $order, $payment_method)
+function commerce_cardgate_crypto_redirect_form($form, &$form_state, $order, $payment_method)
 {
-	_cgbetaling($order, $payment_method);
+    _cgbetaling($order, $payment_method) ;
 }
 
 /**
  * Returns an array of all possible language codes.
  */
-function commerce_cardgate_banktransfer_languages() {
+function commerce_cardgate_crypto_languages() {
   return drupal_map_assoc(array('AU', 'DE', 'FR', 'IT', 'GB', 'ES', 'US'));
 }
 
 /**
  * Returns an array of all possible currency codes.
  */
-function commerce_cardgate_banktransfer_currencies() {
+function commerce_cardgate_crypto_currencies() {
   return drupal_map_assoc(array('EUR', 'GBP', 'USD'));
 }
