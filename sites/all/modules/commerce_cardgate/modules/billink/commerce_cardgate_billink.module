@@ -3,6 +3,7 @@
 require_once(drupal_get_path('module', 'commerce_cardgate') . '/cardgate/base.php');
 
 function commerce_cardgate_billink_commerce_payment_method_info() {
+    if (!currency_check('cardgatebillink')) return [];
   $data = db_query('SELECT data FROM {rules_config} WHERE name = :name', array(':name' => 'commerce_payment_generic'))->fetchField(0);
   $obj = unserialize($data);
   $array = (array)$obj;

@@ -3,6 +3,7 @@
 require_once(drupal_get_path('module', 'commerce_cardgate') . '/cardgate/base.php');
 
 function commerce_cardgate_giftcard_commerce_payment_method_info() {
+    if (!currency_check('cardgategiftcard')) return [];
   $payment_methods = array();
 
   $genericdata = commerce_payment_method_instance_load('generic|commerce_payment_generic');

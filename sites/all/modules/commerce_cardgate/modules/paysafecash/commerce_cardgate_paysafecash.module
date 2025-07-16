@@ -3,6 +3,7 @@
 require_once(drupal_get_path('module', 'commerce_cardgate') . '/cardgate/base.php');
 
 function commerce_cardgate_paysafecash_commerce_payment_method_info() {
+    if (!currency_check('cardgatepaysafecash')) return [];
   $payment_methods = array();
 
   $genericdata = commerce_payment_method_instance_load('generic|commerce_payment_generic');

@@ -41,6 +41,7 @@ function commerce_cardgate_paypal_commerce_payment_method_info() {
 }
 
 function commerce_cardgate_paypal_settings_form($settings = NULL) {
+    if (!currency_check('cardgatepaypal')) return [];
 	$form = _cgsettings($settings, 'commerce_cardgate_paypal_', 'paypal');
 	$form['currency_code'] = array(
 		'#type' => 'select',

@@ -3,39 +3,40 @@
 require_once(drupal_get_path('module', 'commerce_cardgate') . '/cardgate/base.php');
 
 function commerce_cardgate_spraypay_commerce_payment_method_info() {
-  $payment_methods = array();
+    if (!currency_check('cardgatespraypay')) return [];
+    $payment_methods = array();
 
-  $genericdata = commerce_payment_method_instance_load('generic|commerce_payment_generic');
-  $checkoutview = (isset($genericdata['settings']['checkoutview']) ? $genericdata['settings']['checkoutview'] : 'text');
-  $genericdata = null;
+    $genericdata    = commerce_payment_method_instance_load('generic|commerce_payment_generic');
+    $checkoutview   = (isset($genericdata['settings']['checkoutview']) ? $genericdata['settings']['checkoutview'] : 'text');
+    $genericdata    = null;
 
-  $title = t('SprayPay');
-  $img = _cggetImage('spraypay.svg');
+    $title          = t('SprayPay');
+    $img            = _cggetImage('spraypay.svg');
 
- switch ($checkoutview){
- 	case 'logos':
-		$display_title = $img;
-		break;
-	case 'text':
-		$display_title = $title;
-		break;
-	case 'logosandtext':
-		$display_title = $img.' '.$title;
-  		break;
-  }
+    switch ($checkoutview){
+        case 'logos':
+            $display_title = $img;
+            break;
+        case 'text':
+            $display_title = $title;
+            break;
+        case 'logosandtext':
+            $display_title = $img.' '.$title;
+            break;
+    }
 
-  $payment_methods['spraypay'] = array(
-    'base' => 'commerce_cardgate_spraypay',
-    'title' => $title,
-    'short_title' => t('SprayPay'),
-    'display_title' => $display_title,
-    'description' => t('SprayPay betaling'),
-    'terminal' => FALSE,
-    'offsite' => TRUE,
-    'offsite_autoredirect' => TRUE,
-  );
+    $payment_methods['spraypay'] = array(
+        'base' => 'commerce_cardgate_spraypay',
+        'title' => $title,
+        'short_title' => t('SprayPay'),
+        'display_title' => $display_title,
+        'description' => t('SprayPay betaling'),
+        'terminal' => FALSE,
+        'offsite' => TRUE,
+        'offsite_autoredirect' => TRUE,
+    );
 
-  return $payment_methods;
+    return $payment_methods;
 }
 
 function commerce_cardgate_spraypay_settings_form($settings = NULL) {

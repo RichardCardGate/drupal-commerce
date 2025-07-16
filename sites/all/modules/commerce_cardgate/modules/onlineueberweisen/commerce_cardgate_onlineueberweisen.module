@@ -3,6 +3,7 @@
 require_once(drupal_get_path('module', 'commerce_cardgate') . '/cardgate/base.php');
 
 function commerce_cardgate_onlineueberweisen_commerce_payment_method_info() {
+    if (!currency_check('cardgateonlineueberweisen')) return [];
   $payment_methods = array();
 
   $payment_methods = array();
