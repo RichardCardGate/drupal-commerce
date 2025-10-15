@@ -1,0 +1,75 @@
+<?php
+
+require_once(drupal_get_path('module', 'commerce_cardgate') . '/cardgate/base.php');
+
+function commerce_cardgate_bancontact_commerce_payment_method_info() {
+    if (!currency_check('cardgatebancontact')) return [];
+  $data = db_query('SELECT data FROM {rules_config} WHERE name = :name', array(':name' => 'commerce_payment_generic'))->fetchField(0);
+  $obj = unserialize($data);
+  $array = (array)$obj;
+  $prefix = chr(0).'*'.chr(0);
+  $children = $array[$prefix.'children'];
+  $settings = $children[0]->settings['payment_method']['settings'];
+  $checkoutview = isset($settings['checkoutview']) ? $settings['checkoutview'] : 'text';
+
+  $title = t('Bancontact');
+  $img = _cggetImage('bancontact.svg');
+
+  switch ($checkoutview){
+    case 'logos':
+      $display_title = $img;
+      break;
+    case 'text':
+      $display_title = $title;
+      break;
+    case 'logosandtext':
+      $display_title = $img.' '.$title;
+      break;
+  }
+
+  $payment_methods = array();
+  $payment_methods['bancontact'] = array(
+    'base' => 'commerce_cardgate_bancontact',
+    'title' => $title,
+    'short_title' => t('Bancontact'),
+    'display_title' => $display_title,
+    'description' => t('Bancontact betaling'),
+    'terminal' => TRUE,
+    'offsite' => TRUE,
+    'offsite_autoredirect' => TRUE,
+  );
+
+  return $payment_methods;
+}
+
+function commerce_cardgate_bancontact_settings_form($settings = NULL) {
+	$form = _cgsettings($settings, 'commerce_cardgate_bancontact_', 'bancontact');
+	$form['currency_code'] = array(
+		'#type' => 'select',
+		'#title' => t('Currency'),
+		'#description' => t('Transactions can only be processed in one of the listed currencies.'),
+		'#options' => commerce_cardgate_bancontact_currencies(),
+		'#default_value' => (empty($settings['currency_code'])? '':$settings['currency_code']),
+	);
+
+	return $form;
+}
+
+function commerce_cardgate_bancontact_redirect_form($form, &$form_state, $order, $payment_method)
+{
+    _cgbetaling($order, $payment_method) ;
+}
+
+/**
+ * Returns an array of all possible language codes.
+ */
+function commerce_cardgate_bancontact_languages() {
+  return drupal_map_assoc(array('AU', 'DE', 'FR', 'IT', 'GB', 'ES', 'US'));
+}
+
+/**
+ * Returns an array of all possible currency codes.
+ */
+function commerce_cardgate_bancontact_currencies() {
+  return drupal_map_assoc(array('EUR', 'GBP', 'USD'));
+}

@@ -1,5 +1,5 @@
-name = CardGate MisterCash
-description = Implements CardGate MisterCash in Drupal Commerce checkout.
+name = CardGate Bancontact
+description = Implements CardGate Bancontact in Drupal Commerce checkout.
 package = Commerce (CardGate)
 dependencies[] = commerce
 dependencies[] = commerce_ui
